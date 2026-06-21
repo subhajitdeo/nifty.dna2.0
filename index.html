@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NIFTY Option Chain Analyzer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NIFTY Analyzer</title>
     
     <!-- Lightweight Charts -->
     <script src="https://cdn.jsdelivr.net/npm/lightweight-charts@4.1.0/dist/lightweight-charts.standalone.production.js">
@@ -20,16 +20,22 @@
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: #0a0e17;
             color: #e0e0e0;
-            padding: 16px;
+            padding: 10px;
             min-height: 100vh;
             overflow-x: hidden;
         }
 
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
         /* =============================================
-        INSANE ANIMATIONS - MAXIMUM OVERDRIVE!
+        LIGHTWEIGHT ANIMATIONS
         ============================================= */
 
-        /* 1. Floating Particles Background */
         .particles {
             position: fixed;
             top: 0;
@@ -44,219 +50,38 @@
         .particle {
             position: absolute;
             border-radius: 50%;
-            animation: floatParticle linear infinite;
-            opacity: 0;
+            animation: floatLight linear infinite;
+            opacity: 0.12;
         }
 
-        @keyframes floatParticle {
+        @keyframes floatLight {
             0% {
-                transform: translateY(100vh) scale(0) rotate(0deg);
+                transform: translateY(100vh);
                 opacity: 0;
             }
             10% {
-                opacity: 1;
+                opacity: 0.12;
             }
             90% {
-                opacity: 1;
+                opacity: 0.12;
             }
             100% {
-                transform: translateY(-10vh) scale(1) rotate(720deg);
+                transform: translateY(-10vh);
                 opacity: 0;
             }
         }
 
-        /* 2. Glowing Orb Background */
-        .orb {
-            position: fixed;
-            border-radius: 50%;
-            filter: blur(80px);
-            pointer-events: none;
-            z-index: 0;
-            animation: orbFloat 20s ease-in-out infinite;
-        }
-
-        .orb-1 {
-            width: 400px;
-            height: 400px;
-            background: rgba(0, 212, 255, 0.05);
-            top: -100px;
-            left: -100px;
-            animation-delay: 0s;
-        }
-
-        .orb-2 {
-            width: 500px;
-            height: 500px;
-            background: rgba(0, 200, 83, 0.04);
-            bottom: -150px;
-            right: -150px;
-            animation-delay: -7s;
-        }
-
-        .orb-3 {
-            width: 300px;
-            height: 300px;
-            background: rgba(239, 83, 80, 0.04);
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            animation-delay: -14s;
-        }
-
-        @keyframes orbFloat {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            25% { transform: translate(50px, -30px) scale(1.1); }
-            50% { transform: translate(-20px, 40px) scale(0.9); }
-            75% { transform: translate(30px, -20px) scale(1.05); }
-        }
-
-        /* 3. Pulse Rings */
-        .pulse-ring {
-            position: fixed;
-            border-radius: 50%;
-            border: 1px solid rgba(0, 212, 255, 0.05);
-            pointer-events: none;
-            z-index: 0;
-            animation: pulseRing 8s ease-out infinite;
-        }
-
-        .pulse-ring-1 {
-            width: 300px;
-            height: 300px;
-            top: 20%;
-            left: 10%;
-            animation-delay: 0s;
-        }
-
-        .pulse-ring-2 {
-            width: 500px;
-            height: 500px;
-            bottom: 10%;
-            right: 5%;
-            animation-delay: -3s;
-        }
-
-        .pulse-ring-3 {
-            width: 200px;
-            height: 200px;
-            top: 60%;
-            left: 50%;
-            animation-delay: -6s;
-        }
-
-        @keyframes pulseRing {
-            0% {
-                transform: scale(0.5);
-                opacity: 0.8;
-            }
-            100% {
-                transform: scale(2);
-                opacity: 0;
-            }
-        }
-
-        /* 4. Text Glow Animation */
         .text-glow {
-            animation: textGlow 3s ease-in-out infinite;
+            text-shadow: 0 0 30px rgba(0, 212, 255, 0.08);
         }
 
-        @keyframes textGlow {
-            0%, 100% { text-shadow: 0 0 20px rgba(0, 212, 255, 0.1); }
-            50% { text-shadow: 0 0 40px rgba(0, 212, 255, 0.5), 0 0 80px rgba(0, 212, 255, 0.2), 0 0 120px rgba(0, 212, 255, 0.1); }
-        }
-
-        /* 5. Sentiment Glow */
-        .sentiment-glow {
-            animation: sentimentPulse 2s ease-in-out infinite;
-        }
-
-        @keyframes sentimentPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        /* 6. Number Pop Animation */
-        .pop-in {
-            animation: popIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-        }
-
-        @keyframes popIn {
-            0% {
-                transform: scale(0.3) rotate(-10deg);
-                opacity: 0;
-            }
-            100% {
-                transform: scale(1) rotate(0deg);
-                opacity: 1;
-            }
-        }
-
-        /* 7. Shimmer Effect */
-        .shimmer {
-            position: relative;
-            overflow: hidden;
-        }
-
-        .shimmer::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent 30%, rgba(0, 212, 255, 0.03) 50%, transparent 70%);
-            animation: shimmerMove 6s ease-in-out infinite;
-        }
-
-        @keyframes shimmerMove {
-            0% { transform: translateX(-30%) rotate(0deg); }
-            100% { transform: translateX(30%) rotate(5deg); }
-        }
-
-        /* 8. Card Hover Lift */
-        .card-lift {
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        .card-lift:hover {
-            transform: translateY(-4px) scale(1.01);
-            border-color: rgba(0, 212, 255, 0.2);
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-        }
-
-        /* 9. Live Pulse Dot */
-        .live-dot {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            margin-right: 6px;
-            background: #00c853;
-            animation: dotPulse 1.2s ease-in-out infinite;
-            box-shadow: 0 0 20px rgba(0, 200, 83, 0.3);
-        }
-
-        @keyframes dotPulse {
-            0%, 100% {
-                opacity: 1;
-                transform: scale(1);
-                box-shadow: 0 0 20px rgba(0, 200, 83, 0.3);
-            }
-            50% {
-                opacity: 0.3;
-                transform: scale(1.5);
-                box-shadow: 0 0 40px rgba(0, 200, 83, 0.6);
-            }
-        }
-
-        /* 10. Slide In */
         .slide-in {
-            animation: slideIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            animation: slideOnce 0.5s ease-out forwards;
         }
 
-        @keyframes slideIn {
+        @keyframes slideOnce {
             0% {
-                transform: translateY(30px);
+                transform: translateY(12px);
                 opacity: 0;
             }
             100% {
@@ -265,202 +90,123 @@
             }
         }
 
-        /* 11. Flip Item Pulse */
-        .flip-item {
-            animation: flipPulse 3s ease-in-out infinite;
+        .sentiment-badge {
+            animation: pulseLight 3s ease-in-out infinite;
         }
 
-        @keyframes flipPulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-
-        /* 12. Chart Glow */
-        .chart-glow {
-            animation: chartGlow 4s ease-in-out infinite;
-        }
-
-        @keyframes chartGlow {
-            0%, 100% { box-shadow: 0 0 20px rgba(0, 212, 255, 0.05); }
-            50% { box-shadow: 0 0 40px rgba(0, 212, 255, 0.15); }
-        }
-
-        /* 13. Rain Effect */
-        .rain {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-            overflow: hidden;
-        }
-
-        .rain-drop {
-            position: absolute;
-            width: 1px;
-            background: linear-gradient(to bottom, transparent, rgba(0, 212, 255, 0.1));
-            animation: rainFall linear infinite;
-        }
-
-        @keyframes rainFall {
-            0% {
-                transform: translateY(-100px);
-                opacity: 0;
-            }
-            10% {
+        @keyframes pulseLight {
+            0%, 100% {
                 opacity: 1;
             }
-            90% {
+            50% {
+                opacity: 0.85;
+            }
+        }
+
+        .live-dot {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            margin-right: 4px;
+            background: #00c853;
+            animation: blink 1.5s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% {
                 opacity: 1;
             }
-            100% {
-                transform: translateY(100vh);
-                opacity: 0;
+            50% {
+                opacity: 0.3;
             }
-        }
-
-        /* 14. Sparkle */
-        .sparkle {
-            position: fixed;
-            pointer-events: none;
-            z-index: 0;
-            animation: sparkleAnim 3s ease-in-out infinite;
-        }
-
-        @keyframes sparkleAnim {
-            0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
-            50% { opacity: 1; transform: scale(1) rotate(180deg); }
-        }
-
-        /* 15. Border Glow Pulse */
-        .border-pulse {
-            animation: borderPulse 3s ease-in-out infinite;
-        }
-
-        @keyframes borderPulse {
-            0%, 100% { border-color: rgba(0, 212, 255, 0.08); }
-            50% { border-color: rgba(0, 212, 255, 0.3); }
         }
 
         /* =============================================
-        BASE STYLES
+        HEADER
         ============================================= */
-        .container {
-            max-width: 480px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 1;
-        }
-
         .header {
             text-align: center;
-            padding: 16px 0 20px;
-            border-bottom: 1px solid rgba(0, 212, 255, 0.15);
-            margin-bottom: 20px;
-            position: relative;
+            padding: 10px 0 14px;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.06);
+            margin-bottom: 12px;
         }
 
         .header h1 {
             color: #00d4ff;
-            font-size: 1.5em;
+            font-size: 1.2em;
             font-weight: 600;
             letter-spacing: -0.5px;
         }
 
         .header .subtitle {
-            color: #666;
-            font-size: 0.7em;
-            margin-top: 4px;
-            letter-spacing: 0.3px;
+            color: #555;
+            font-size: 0.6em;
+            margin-top: 2px;
         }
 
         .sentiment-badge {
             display: inline-block;
-            padding: 8px 28px;
-            border-radius: 20px;
-            font-size: 1.1em;
+            padding: 5px 18px;
+            border-radius: 14px;
+            font-size: 0.85em;
             font-weight: 600;
-            margin: 10px 0 6px;
-            letter-spacing: 0.5px;
-            transition: all 0.5s ease;
+            margin: 6px 0 4px;
+            letter-spacing: 0.3px;
         }
 
         .bullish {
-            background: rgba(0, 200, 83, 0.2);
+            background: rgba(0, 200, 83, 0.12);
             color: #00c853;
-            border: 1px solid rgba(0, 200, 83, 0.3);
-            box-shadow: 0 0 30px rgba(0, 200, 83, 0.1);
-            animation: bullishGlow 2s ease-in-out infinite;
+            border: 1px solid rgba(0, 200, 83, 0.15);
         }
         .mild-bullish {
-            background: rgba(255, 214, 0, 0.15);
+            background: rgba(255, 214, 0, 0.1);
             color: #ffd600;
-            border: 1px solid rgba(255, 214, 0, 0.25);
+            border: 1px solid rgba(255, 214, 0, 0.12);
         }
         .bearish {
-            background: rgba(211, 47, 47, 0.2);
+            background: rgba(211, 47, 47, 0.12);
             color: #ef5350;
-            border: 1px solid rgba(211, 47, 47, 0.3);
-            box-shadow: 0 0 30px rgba(211, 47, 47, 0.1);
-            animation: bearishGlow 2s ease-in-out infinite;
+            border: 1px solid rgba(211, 47, 47, 0.15);
         }
         .mild-bearish {
-            background: rgba(255, 111, 0, 0.15);
+            background: rgba(255, 111, 0, 0.1);
             color: #ff6f00;
-            border: 1px solid rgba(255, 111, 0, 0.25);
+            border: 1px solid rgba(255, 111, 0, 0.12);
         }
         .risky {
-            background: rgba(255, 152, 0, 0.15);
+            background: rgba(255, 152, 0, 0.1);
             color: #ff9800;
-            border: 1px solid rgba(255, 152, 0, 0.25);
-            box-shadow: 0 0 30px rgba(255, 152, 0, 0.1);
-            animation: riskyGlow 1.5s ease-in-out infinite;
+            border: 1px solid rgba(255, 152, 0, 0.12);
         }
         .trap {
-            background: rgba(158, 158, 158, 0.15);
+            background: rgba(158, 158, 158, 0.1);
             color: #9e9e9e;
-            border: 1px solid rgba(158, 158, 158, 0.25);
+            border: 1px solid rgba(158, 158, 158, 0.12);
         }
 
-        @keyframes bullishGlow {
-            0%, 100% { box-shadow: 0 0 20px rgba(0, 200, 83, 0.1); }
-            50% { box-shadow: 0 0 60px rgba(0, 200, 83, 0.3), 0 0 100px rgba(0, 200, 83, 0.1); }
-        }
-
-        @keyframes bearishGlow {
-            0%, 100% { box-shadow: 0 0 20px rgba(211, 47, 47, 0.1); }
-            50% { box-shadow: 0 0 60px rgba(211, 47, 47, 0.3), 0 0 100px rgba(211, 47, 47, 0.1); }
-        }
-
-        @keyframes riskyGlow {
-            0%, 100% { box-shadow: 0 0 20px rgba(255, 152, 0, 0.1); }
-            50% { box-shadow: 0 0 60px rgba(255, 152, 0, 0.3), 0 0 100px rgba(255, 152, 0, 0.1); }
-        }
-
+        /* =============================================
+        SPOT CARD
+        ============================================= */
         .spot-card {
             background: linear-gradient(135deg, #141b2d 0%, #1a2335 100%);
-            border-radius: 12px;
-            padding: 16px 20px;
-            margin-bottom: 16px;
-            border: 1px solid rgba(0, 212, 255, 0.08);
+            border-radius: 10px;
+            padding: 12px 14px;
+            margin-bottom: 12px;
+            border: 1px solid rgba(0, 212, 255, 0.05);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: relative;
-            overflow: hidden;
         }
 
         .spot-left {
             display: flex;
             flex-direction: column;
-            position: relative;
-            z-index: 1;
         }
 
         .spot-price {
-            font-size: 2em;
+            font-size: 1.6em;
             font-weight: 700;
             color: #fff;
             letter-spacing: -0.5px;
@@ -468,24 +214,22 @@
         }
 
         .spot-time {
-            font-size: 0.65em;
+            font-size: 0.55em;
             color: #555;
             margin-top: 2px;
         }
 
         .spot-right {
             text-align: right;
-            position: relative;
-            z-index: 1;
         }
 
         .spot-expiry {
-            font-size: 0.75em;
-            color: #888;
-            background: rgba(0, 212, 255, 0.06);
-            padding: 4px 12px;
-            border-radius: 12px;
-            border: 1px solid rgba(0, 212, 255, 0.08);
+            font-size: 0.6em;
+            color: #777;
+            background: rgba(0, 212, 255, 0.04);
+            padding: 2px 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(0, 212, 255, 0.05);
         }
 
         .spot-expiry span {
@@ -494,9 +238,9 @@
         }
 
         .spot-atm {
-            font-size: 0.7em;
+            font-size: 0.55em;
             color: #666;
-            margin-top: 4px;
+            margin-top: 2px;
         }
 
         .spot-atm span {
@@ -504,52 +248,46 @@
             font-weight: 600;
         }
 
+        /* =============================================
+        GRID 2
+        ============================================= */
         .grid-2 {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 16px;
+            gap: 8px;
+            margin-bottom: 12px;
         }
 
         .card {
             background: #141b2d;
-            border-radius: 12px;
-            padding: 14px 16px;
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        .card:hover {
-            border-color: rgba(0, 212, 255, 0.2);
-            transform: translateY(-3px) scale(1.01);
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 10px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
         }
 
         .card-title {
-            font-size: 0.6em;
+            font-size: 0.45em;
             text-transform: uppercase;
             color: #555;
-            letter-spacing: 0.8px;
+            letter-spacing: 0.5px;
             font-weight: 600;
-            margin-bottom: 10px;
+            margin-bottom: 6px;
         }
 
         .stat-row {
             display: flex;
             justify-content: space-between;
-            padding: 4px 0;
-            font-size: 0.8em;
+            padding: 2px 0;
+            font-size: 0.7em;
         }
 
         .stat-row .label {
             color: #666;
         }
-
         .stat-row .value {
             color: #fff;
             font-weight: 600;
         }
-
         .stat-row .positive {
             color: #ef5350;
         }
@@ -566,37 +304,30 @@
             color: #ffd600;
         }
 
+        /* =============================================
+        SIDE CARD
+        ============================================= */
         .side-card {
             background: #141b2d;
-            border-radius: 12px;
-            padding: 14px 16px;
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            margin-bottom: 16px;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        .side-card:hover {
-            border-color: rgba(0, 212, 255, 0.15);
-            transform: translateY(-2px);
+            border-radius: 10px;
+            padding: 10px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            margin-bottom: 12px;
         }
 
         .side-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 16px;
-        }
-
-        .side-col {
-            padding: 0 4px;
+            gap: 10px;
         }
 
         .side-col .side-label {
-            font-size: 0.6em;
+            font-size: 0.45em;
             text-transform: uppercase;
             color: #555;
-            letter-spacing: 0.8px;
+            letter-spacing: 0.5px;
             font-weight: 600;
-            margin-bottom: 8px;
+            margin-bottom: 4px;
             text-align: center;
         }
 
@@ -608,40 +339,36 @@
         }
 
         .side-col .stat-row {
-            font-size: 0.75em;
-            padding: 3px 0;
+            font-size: 0.65em;
+            padding: 2px 0;
         }
 
         /* =============================================
-        3 CHARTS!
+        CHARTS - FIXED SIZING!
         ============================================= */
         .chart-grid {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 12px;
-            margin-bottom: 16px;
+            gap: 8px;
+            margin-bottom: 12px;
         }
 
         .chart-card {
             background: #141b2d;
-            border-radius: 12px;
-            padding: 14px 12px;
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        .chart-card:hover {
-            border-color: rgba(0, 212, 255, 0.15);
-            transform: translateY(-2px);
+            border-radius: 10px;
+            padding: 10px 8px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            width: 100%;
         }
 
         .chart-card .card-title {
-            margin-bottom: 8px;
+            margin-bottom: 4px;
         }
 
         .chart-container {
             width: 100%;
-            height: 150px;
+            height: 140px;
+            position: relative;
         }
 
         /* =============================================
@@ -649,63 +376,56 @@
         ============================================= */
         .table-card {
             background: #141b2d;
-            border-radius: 12px;
-            padding: 14px 12px;
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            margin-bottom: 16px;
+            border-radius: 10px;
+            padding: 10px 8px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            margin-bottom: 12px;
             overflow-x: auto;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        .table-card:hover {
-            border-color: rgba(0, 212, 255, 0.15);
-            transform: translateY(-2px);
         }
 
         .strike-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.7em;
+            font-size: 0.55em;
+            min-width: 320px;
         }
 
         .strike-table th {
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(255, 255, 255, 0.02);
             color: #555;
-            padding: 6px 4px;
+            padding: 4px 3px;
             text-align: center;
             font-weight: 500;
-            letter-spacing: 0.3px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
         }
 
         .strike-table td {
-            padding: 5px 4px;
+            padding: 4px 3px;
             text-align: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
             vertical-align: middle;
         }
 
         .atm-cell {
-            background: rgba(0, 180, 255, 0.12) !important;
-            border-radius: 2px;
+            background: rgba(0, 180, 255, 0.08) !important;
         }
 
         .ce-100 {
-            background: rgba(255, 80, 80, 0.2) !important;
+            background: rgba(255, 80, 80, 0.15) !important;
             font-weight: 600;
         }
 
         .pe-100 {
-            background: rgba(80, 200, 80, 0.2) !important;
+            background: rgba(80, 200, 80, 0.15) !important;
             font-weight: 600;
         }
 
         .ce-strong {
-            background: rgba(255, 200, 0, 0.12) !important;
+            background: rgba(255, 200, 0, 0.08) !important;
         }
 
         .pe-strong {
-            background: rgba(255, 200, 0, 0.12) !important;
+            background: rgba(255, 200, 0, 0.08) !important;
         }
 
         .diff-positive {
@@ -713,16 +433,6 @@
         }
         .diff-negative {
             color: #4caf50;
-        }
-
-        .strike-price {
-            font-weight: 700;
-            color: #fff;
-        }
-
-        .strike-diff {
-            font-size: 0.75em;
-            font-weight: 500;
         }
 
         .strike-middle {
@@ -736,25 +446,19 @@
         ============================================= */
         .flip-card {
             background: #141b2d;
-            border-radius: 12px;
-            padding: 14px 16px;
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            margin-bottom: 16px;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        .flip-card:hover {
-            border-color: rgba(0, 212, 255, 0.15);
-            transform: translateY(-2px);
+            border-radius: 10px;
+            padding: 10px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            margin-bottom: 12px;
         }
 
         .flip-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 6px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-            font-size: 0.75em;
+            padding: 3px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+            font-size: 0.65em;
         }
 
         .flip-item:last-child {
@@ -766,10 +470,6 @@
             font-size: 0.8em;
         }
 
-        .flip-sentiment {
-            font-weight: 600;
-        }
-
         .flip-sentiment.bullish {
             color: #00c853;
         }
@@ -779,20 +479,14 @@
         .flip-sentiment.risky {
             color: #ff9800;
         }
-        .flip-sentiment.mild-bullish {
-            color: #ffd600;
-        }
-        .flip-sentiment.mild-bearish {
-            color: #ff6f00;
-        }
-
-        .flip-price {
-            color: #888;
-        }
 
         .flip-arrow {
             color: #444;
-            margin: 0 6px;
+            margin: 0 4px;
+        }
+
+        .flip-price {
+            color: #777;
         }
 
         /* =============================================
@@ -800,11 +494,11 @@
         ============================================= */
         .status {
             text-align: center;
-            padding: 12px 0;
+            padding: 8px 0;
             color: #444;
-            font-size: 0.6em;
-            border-top: 1px solid rgba(255, 255, 255, 0.04);
-            margin-top: 8px;
+            font-size: 0.5em;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            margin-top: 4px;
             line-height: 1.6;
         }
 
@@ -818,44 +512,41 @@
             text-decoration: none;
         }
 
-        .status a:hover {
-            text-decoration: underline;
-        }
-
         /* =============================================
         RESPONSIVE
         ============================================= */
         @media (max-width: 400px) {
             body {
-                padding: 10px;
+                padding: 6px;
             }
 
             .spot-price {
-                font-size: 1.6em;
+                font-size: 1.3em;
             }
 
             .grid-2 {
-                gap: 8px;
+                gap: 5px;
             }
 
             .card {
-                padding: 10px 12px;
+                padding: 8px 8px;
             }
 
             .side-grid {
-                gap: 10px;
+                gap: 6px;
             }
 
             .strike-table {
-                font-size: 0.55em;
-            }
-
-            .flip-item {
-                font-size: 0.65em;
+                font-size: 0.45em;
+                min-width: 280px;
             }
 
             .chart-container {
-                height: 120px;
+                height: 110px;
+            }
+
+            .flip-item {
+                font-size: 0.55em;
             }
         }
 
@@ -863,228 +554,164 @@
             .container {
                 max-width: 600px;
             }
+
+            .chart-container {
+                height: 160px;
+            }
         }
 
         /* Scrollbar */
         ::-webkit-scrollbar {
-            width: 3px;
-            height: 3px;
+            width: 2px;
+            height: 2px;
         }
         ::-webkit-scrollbar-track {
             background: #0a0e17;
         }
         ::-webkit-scrollbar-thumb {
             background: #1a2a3a;
-            border-radius: 4px;
+            border-radius: 2px;
         }
     </style>
 </head>
 <body>
 
-    <!-- =============================================
-    PARTICLES BACKGROUND
-    ============================================= -->
+    <!-- PARTICLES -->
     <div class="particles" id="particles"></div>
-
-    <!-- =============================================
-    GLOWING ORBS
-    ============================================= -->
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
-    <div class="orb orb-3"></div>
-
-    <!-- =============================================
-    PULSE RINGS
-    ============================================= -->
-    <div class="pulse-ring pulse-ring-1"></div>
-    <div class="pulse-ring pulse-ring-2"></div>
-    <div class="pulse-ring pulse-ring-3"></div>
-
-    <!-- =============================================
-    RAIN EFFECT
-    ============================================= -->
-    <div class="rain" id="rain"></div>
 
     <div class="container">
 
-        <!-- =============================================
-        HEADER
-        ============================================= -->
+        <!-- HEADER -->
         <div class="header slide-in">
             <h1 class="text-glow">📊 NIFTY Analyzer</h1>
             <div id="sentimentDisplay"></div>
             <div class="subtitle" id="tradingStatus">Status: Checking...</div>
         </div>
 
-        <!-- =============================================
-        SPOT CARD
-        ============================================= -->
-        <div class="spot-card shimmer slide-in border-pulse" style="animation-delay:0.1s;">
+        <!-- SPOT -->
+        <div class="spot-card slide-in" style="animation-delay:0.05s;">
             <div class="spot-left">
-                <div class="spot-price">
-                    <span id="spotPrice">-</span>
-                </div>
+                <div class="spot-price"><span id="spotPrice">-</span></div>
                 <div class="spot-time" id="lastUpdate">Last Updated: --</div>
             </div>
             <div class="spot-right">
-                <div class="spot-expiry">📅 Expiry: <span id="expiryDisplay">--</span></div>
+                <div class="spot-expiry">📅 <span id="expiryDisplay">--</span></div>
                 <div class="spot-atm">📍 ATM: <span id="atmStrike">--</span></div>
             </div>
         </div>
 
-        <!-- =============================================
-        GRID: Peak Strikes
-        ============================================= -->
+        <!-- PEAKS -->
         <div class="grid-2">
-            <div class="card card-lift slide-in" style="animation-delay:0.2s;">
+            <div class="card slide-in" style="animation-delay:0.1s;">
                 <div class="card-title">⚡ CE Peak</div>
                 <div class="stat-row"><span class="label">Strike</span><span class="value" id="cePeak">-</span></div>
                 <div class="stat-row"><span class="label">Movement</span><span class="value" id="ceMovement">-</span></div>
             </div>
-            <div class="card card-lift slide-in" style="animation-delay:0.3s;">
+            <div class="card slide-in" style="animation-delay:0.15s;">
                 <div class="card-title">⚡ PE Peak</div>
                 <div class="stat-row"><span class="label">Strike</span><span class="value" id="pePeak">-</span></div>
                 <div class="stat-row"><span class="label">Movement</span><span class="value" id="peMovement">-</span></div>
             </div>
         </div>
 
-        <!-- =============================================
-        CE / PE Side-by-Side
-        ============================================= -->
-        <div class="side-card card-lift slide-in" style="animation-delay:0.4s;">
+        <!-- CE/PE -->
+        <div class="side-card slide-in" style="animation-delay:0.2s;">
             <div class="side-grid">
                 <div class="side-col">
-                    <div class="side-label ce">📈 CALL (CE)</div>
+                    <div class="side-label ce">📈 CE</div>
                     <div class="stat-row"><span class="label">Entry</span><span class="value" id="buyEntry">-</span></div>
-                    <div class="stat-row"><span class="label">Stop Loss</span><span class="value" id="buySl">-</span></div>
-                    <div class="stat-row"><span class="label">Target 1</span><span class="value" id="buyTarget">-</span></div>
-                    <div class="stat-row"><span class="label">Target 2</span><span class="value" id="buyTarget2">-</span></div>
+                    <div class="stat-row"><span class="label">SL</span><span class="value" id="buySl">-</span></div>
+                    <div class="stat-row"><span class="label">Tgt 1</span><span class="value" id="buyTarget">-</span></div>
+                    <div class="stat-row"><span class="label">Tgt 2</span><span class="value" id="buyTarget2">-</span></div>
                 </div>
                 <div class="side-col">
-                    <div class="side-label pe">📉 PUT (PE)</div>
+                    <div class="side-label pe">📉 PE</div>
                     <div class="stat-row"><span class="label">Entry</span><span class="value" id="sellEntry">-</span></div>
-                    <div class="stat-row"><span class="label">Stop Loss</span><span class="value" id="sellSl">-</span></div>
-                    <div class="stat-row"><span class="label">Target 1</span><span class="value" id="sellTarget">-</span></div>
-                    <div class="stat-row"><span class="label">Target 2</span><span class="value" id="sellTarget2">-</span></div>
+                    <div class="stat-row"><span class="label">SL</span><span class="value" id="sellSl">-</span></div>
+                    <div class="stat-row"><span class="label">Tgt 1</span><span class="value" id="sellTarget">-</span></div>
+                    <div class="stat-row"><span class="label">Tgt 2</span><span class="value" id="sellTarget2">-</span></div>
                 </div>
             </div>
         </div>
 
-        <!-- =============================================
-        3 CHARTS!
-        ============================================= -->
-        <div class="chart-grid slide-in" style="animation-delay:0.5s;">
-            <!-- Chart 1: ATM -->
-            <div class="chart-card card-lift chart-glow border-pulse">
+        <!-- 3 CHARTS - FIXED SIZE -->
+        <div class="chart-grid slide-in" style="animation-delay:0.25s;">
+            <div class="chart-card">
                 <div class="card-title">📍 ATM OI</div>
                 <div class="chart-container" id="chartATM"></div>
             </div>
-            <!-- Chart 2: ATM - 1 (OTM Put) -->
-            <div class="chart-card card-lift chart-glow border-pulse">
-                <div class="card-title">🔻 ATM - 1 (OTM Put)</div>
+            <div class="chart-card">
+                <div class="card-title">🔻 ATM-1 OI</div>
                 <div class="chart-container" id="chartMinus1"></div>
             </div>
-            <!-- Chart 3: ATM + 1 (OTM Call) -->
-            <div class="chart-card card-lift chart-glow border-pulse">
-                <div class="card-title">🔺 ATM + 1 (OTM Call)</div>
+            <div class="chart-card">
+                <div class="card-title">🔺 ATM+1 OI</div>
                 <div class="chart-container" id="chartPlus1"></div>
             </div>
         </div>
 
-        <!-- =============================================
-        STRIKE TABLE
-        ============================================= -->
-        <div class="table-card card-lift slide-in" style="animation-delay:0.6s;">
-            <div class="card-title">📋 Strike-wise Analysis</div>
+        <!-- TABLE -->
+        <div class="table-card slide-in" style="animation-delay:0.3s;">
+            <div class="card-title">📋 Strike Analysis</div>
             <div style="overflow-x: auto;">
                 <table class="strike-table" id="strikeTable">
                     <thead>
                         <tr>
                             <th>CE OI</th>
                             <th>CE %</th>
-                            <th style="min-width:80px;">Strike</th>
+                            <th style="min-width:60px;">Strike</th>
                             <th>PE %</th>
                             <th>PE OI</th>
                         </tr>
                     </thead>
                     <tbody id="strikeTableBody">
-                        <tr><td colspan="5" style="text-align:center;color:#444;padding:20px 0;">Loading data...</td></tr>
+                        <tr><td colspan="5" style="text-align:center;color:#444;padding:16px 0;">Loading...</td></tr>
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <!-- =============================================
-        FLIP HISTORY
-        ============================================= -->
-        <div class="flip-card card-lift slide-in" style="animation-delay:0.7s;">
+        <!-- FLIPS -->
+        <div class="flip-card slide-in" style="animation-delay:0.35s;">
             <div class="card-title">🔄 Recent Flips</div>
             <div id="flipList">
-                <div style="text-align:center;color:#444;padding:10px 0;font-size:0.8em;">No flips yet</div>
+                <div style="text-align:center;color:#444;padding:6px 0;font-size:0.65em;">No flips yet</div>
             </div>
         </div>
 
-        <!-- =============================================
-        STATUS
-        ============================================= -->
-        <div class="status slide-in" style="animation-delay:0.8s;">
+        <!-- STATUS -->
+        <div class="status slide-in" style="animation-delay:0.4s;">
             <span><span class="live-dot"></span> <span class="live">LIVE</span></span>
-            | Updates every 1 min
-            | 📚 <a href="https://github.com/subhajitdeo/nifty.dna/" target="_blank">GitHub</a>
-            <br>
-            ⚠️ Educational Purpose Only
+            | 1 min | 📚 <a href="https://github.com/subhajitdeo/nifty.dna/" target="_blank">GitHub</a>
+            <br>⚠️ Educational Purpose Only
         </div>
 
     </div>
 
-    <!-- =============================================
-    SUPABASE
-    ============================================= -->
+    <!-- SUPABASE -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
     </script>
 
     <script>
-        // =============================================
-        // PARTICLES
-        // =============================================
+        // PARTICLES - 15 only
         (function createParticles() {
             const container = document.getElementById('particles');
-            const colors = ['#00d4ff', '#00c853', '#ef5350', '#ffd600', '#ff9800', '#9c27b0'];
-            for (let i = 0; i < 80; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                const size = Math.random() * 4 + 1;
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.width = size + 'px';
-                particle.style.height = size + 'px';
-                particle.style.animationDuration = (Math.random() * 15 + 8) + 's';
-                particle.style.animationDelay = (Math.random() * 15) + 's';
-                particle.style.background = colors[Math.floor(Math.random() * colors.length)];
-                particle.style.boxShadow = `0 0 ${size * 2}px ${particle.style.background}`;
-                container.appendChild(particle);
+            const colors = ['#00d4ff', '#00c853', '#ef5350'];
+            for (let i = 0; i < 15; i++) {
+                const p = document.createElement('div');
+                p.className = 'particle';
+                const s = Math.random() * 2 + 1;
+                p.style.left = Math.random() * 100 + '%';
+                p.style.width = s + 'px';
+                p.style.height = s + 'px';
+                p.style.animationDuration = (Math.random() * 12 + 10) + 's';
+                p.style.animationDelay = (Math.random() * 10) + 's';
+                p.style.background = colors[Math.floor(Math.random() * colors.length)];
+                container.appendChild(p);
             }
         })();
 
-        // =============================================
-        // RAIN EFFECT
-        // =============================================
-        (function createRain() {
-            const container = document.getElementById('rain');
-            for (let i = 0; i < 60; i++) {
-                const drop = document.createElement('div');
-                drop.className = 'rain-drop';
-                drop.style.left = Math.random() * 100 + '%';
-                drop.style.height = (Math.random() * 30 + 10) + 'px';
-                drop.style.animationDuration = (Math.random() * 3 + 2) + 's';
-                drop.style.animationDelay = (Math.random() * 5) + 's';
-                drop.style.opacity = Math.random() * 0.5 + 0.1;
-                container.appendChild(drop);
-            }
-        })();
-
-        // =============================================
-        // SUPABASE CONFIG
-        // =============================================
+        // SUPABASE
         const SUPABASE_URL = 'https://imwqexfibkanqldjocmt.supabase.co';
         const SUPABASE_KEY =
             'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imltd3FleGZpYmthbnFsZGpvY210Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE5ODU0MTIsImV4cCI6MjA5NzU2MTQxMn0.vATdjPqvAQ1H35iznWsBOdVuZepC2LRGCHeBGChufX0';
@@ -1092,7 +719,7 @@
         const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         // =============================================
-        // 3 CHARTS WITH REAL TIME!
+        // CHARTS - WITH FIXED SIZING
         // =============================================
         let charts = { atm: null, minus1: null, plus1: null };
         let chartLines = { atm: { ce: null, pe: null }, minus1: { ce: null, pe: null }, plus1: { ce: null, pe: null } };
@@ -1112,28 +739,32 @@
 
             Object.keys(containers).forEach(key => {
                 const container = containers[key];
+                // Get container width
+                const rect = container.getBoundingClientRect();
+                const width = rect.width || container.clientWidth || 300;
+
                 const chart = LightweightCharts.createChart(container, {
-                    width: container.clientWidth,
-                    height: 150,
+                    width: width,
+                    height: 140,
                     layout: {
                         background: { color: 'transparent' },
-                        textColor: '#555',
+                        textColor: '#444',
                     },
                     grid: {
-                        vertLines: { color: 'rgba(255,255,255,0.03)' },
-                        horzLines: { color: 'rgba(255,255,255,0.03)' },
+                        vertLines: { color: 'rgba(255,255,255,0.02)' },
+                        horzLines: { color: 'rgba(255,255,255,0.02)' },
                     },
                     rightPriceScale: {
-                        borderColor: 'rgba(255,255,255,0.05)',
+                        borderColor: 'rgba(255,255,255,0.03)',
                     },
                     timeScale: {
-                        borderColor: 'rgba(255,255,255,0.05)',
+                        borderColor: 'rgba(255,255,255,0.03)',
                         timeVisible: true,
                         secondsVisible: false,
                         tickMarkFormatter: (time) => {
-                            // Format time as HH:MM
                             const date = new Date(time * 1000);
-                            return date.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: false });
+                            return date.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit',
+                                hour12: false });
                         }
                     },
                     crosshair: {
@@ -1143,14 +774,14 @@
 
                 const ceLine = chart.addLineSeries({
                     color: '#ef5350',
-                    lineWidth: 2,
+                    lineWidth: 1.5,
                     priceLineVisible: false,
                     lastValueVisible: true,
                 });
 
                 const peLine = chart.addLineSeries({
                     color: '#4caf50',
-                    lineWidth: 2,
+                    lineWidth: 1.5,
                     priceLineVisible: false,
                     lastValueVisible: true,
                 });
@@ -1161,7 +792,7 @@
         }
 
         function updateChartData(chartKey, ceData, peData) {
-            const maxPoints = 40;
+            const maxPoints = 30;
             if (ceData && ceData.length > maxPoints) ceData = ceData.slice(-maxPoints);
             if (peData && peData.length > maxPoints) peData = peData.slice(-maxPoints);
 
@@ -1175,30 +806,22 @@
 
         function addChartDataPoint(atmStrike, strikes, currentTime) {
             chartTimeIndex++;
-
-            // Use actual timestamp for charts
             const timestamp = Math.floor(currentTime / 1000);
 
-            // Find ATM, ATM-1, ATM+1
             const atmData = strikes.find(s => s.is_atm);
             const atmMinus1 = strikes.find(s => s.strike === atmStrike - 50);
             const atmPlus1 = strikes.find(s => s.strike === atmStrike + 50);
 
-            // ATM Chart
             if (atmData) {
                 chartData.atm.ce.push({ time: timestamp, value: atmData.ce_oi || 0 });
                 chartData.atm.pe.push({ time: timestamp, value: atmData.pe_oi || 0 });
                 updateChartData('atm', chartData.atm.ce, chartData.atm.pe);
             }
-
-            // ATM - 1 Chart
             if (atmMinus1) {
                 chartData.minus1.ce.push({ time: timestamp, value: atmMinus1.ce_oi || 0 });
                 chartData.minus1.pe.push({ time: timestamp, value: atmMinus1.pe_oi || 0 });
                 updateChartData('minus1', chartData.minus1.ce, chartData.minus1.pe);
             }
-
-            // ATM + 1 Chart
             if (atmPlus1) {
                 chartData.plus1.ce.push({ time: timestamp, value: atmPlus1.ce_oi || 0 });
                 chartData.plus1.pe.push({ time: timestamp, value: atmPlus1.pe_oi || 0 });
@@ -1207,7 +830,7 @@
         }
 
         // =============================================
-        // HELPER FUNCTIONS
+        // HELPERS
         // =============================================
         function getSentimentClass(s) {
             if (!s) return 'risky';
@@ -1258,43 +881,29 @@
             return d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true });
         }
 
-        function formatDate(ts) {
-            if (!ts) return '--';
-            const d = new Date(ts);
-            return d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
-        }
-
         // =============================================
         // UPDATE DISPLAY
         // =============================================
         function updateDisplay(data) {
             if (!data) return;
 
-            // Spot
-            const spotEl = document.getElementById('spotPrice');
-            spotEl.textContent = formatNumber(data.spot_price);
-            spotEl.classList.remove('pop-in');
-            void spotEl.offsetWidth;
-            spotEl.classList.add('pop-in');
-
-            document.getElementById('lastUpdate').textContent = 'Last Updated: ' + formatTime(data.last_updated || data
-                .created_at);
+            document.getElementById('spotPrice').textContent = formatNumber(data.spot_price);
+            document.getElementById('lastUpdate').textContent = 'Updated: ' + formatTime(data.last_updated || data
+            .created_at);
             document.getElementById('atmStrike').textContent = formatNumber(data.atm_strike);
             document.getElementById('expiryDisplay').textContent = data.expiry || '--';
 
-            // Sentiment
             const sentiment = data.sentiment || 'RISKY';
             const isTrap = data.is_trap || false;
             const el = document.getElementById('sentimentDisplay');
             let txt = sentiment;
-            if (isTrap) txt = '⚠️ TRAP - NO TRADE';
+            if (isTrap) txt = '⚠️ TRAP';
             const badge = document.createElement('div');
-            badge.className = `sentiment-badge ${getSentimentClass(sentiment)} sentiment-glow`;
+            badge.className = `sentiment-badge ${getSentimentClass(sentiment)}`;
             badge.textContent = txt;
             el.innerHTML = '';
             el.appendChild(badge);
 
-            // Peaks
             document.getElementById('cePeak').textContent = formatNumber(data.ce_peak);
             document.getElementById('pePeak').textContent = formatNumber(data.pe_peak);
 
@@ -1306,31 +915,24 @@
             pe.textContent = data.pe_movement ? `${getMovementArrow(data.pe_movement)} ${data.pe_movement}` : '-';
             pe.className = 'value ' + getMovementClass(data.pe_movement);
 
-            // Buy Side
             document.getElementById('buyEntry').textContent = formatNumber(data.buy_entry);
             document.getElementById('buySl').textContent = formatNumber(data.buy_sl);
             document.getElementById('buyTarget').textContent = formatNumber(data.buy_target);
             document.getElementById('buyTarget2').textContent = formatNumber(data.buy_target2);
-
-            // Sell Side
             document.getElementById('sellEntry').textContent = formatNumber(data.sell_entry);
             document.getElementById('sellSl').textContent = formatNumber(data.sell_sl);
             document.getElementById('sellTarget').textContent = formatNumber(data.sell_target);
             document.getElementById('sellTarget2').textContent = formatNumber(data.sell_target2);
 
-            // Status
-            document.getElementById('tradingStatus').textContent = data.strike_data ? '✅ System Running' :
-            '⏳ No data';
+            document.getElementById('tradingStatus').textContent = data.strike_data ? '✅ Live' : '⏳ Waiting';
 
-            // Strike Table
             if (data.strike_data && data.strike_data.length > 0) {
                 updateStrikeTable(data.strike_data);
-                // Use actual timestamp for charts
                 const now = data.last_updated ? new Date(data.last_updated).getTime() : Date.now();
                 addChartDataPoint(data.atm_strike, data.strike_data, now);
             } else {
                 document.getElementById('strikeTableBody').innerHTML =
-                    '<tr><td colspan="5" style="text-align:center;color:#444;padding:20px 0;">No data</td></tr>';
+                    '<tr><td colspan="5" style="text-align:center;color:#444;padding:16px 0;">No data</td></tr>';
             }
         }
 
@@ -1342,7 +944,7 @@
             tbody.innerHTML = '';
 
             if (!strikes || strikes.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#444;padding:20px 0;">No data</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#444;padding:16px 0;">No data</td></tr>';
                 return;
             }
 
@@ -1372,7 +974,7 @@
                 tr.innerHTML = `
                     <td>${formatNumber(s.ce_oi)}</td>
                     <td class="${ceClass}">${formatPercentage(cePct)}</td>
-                    <td style="text-align:center;">
+                    <td>
                         <div class="${strikeClass}" style="font-weight:bold;font-size:1em;padding:2px 0;">
                             <span class="${strikeMiddleClass}">${formatNumber(s.strike)}</span>
                         </div>
@@ -1398,21 +1000,19 @@
                     .limit(1);
 
                 if (error) {
-                    console.error('Supabase error:', error);
-                    document.getElementById('tradingStatus').textContent = '❌ Error: ' + error.message;
+                    document.getElementById('tradingStatus').textContent = '❌ Error';
                     return;
                 }
 
                 if (data && data.length > 0) {
                     updateDisplay(data[0]);
                 } else {
-                    document.getElementById('tradingStatus').textContent = '⏳ No data found (market closed)';
+                    document.getElementById('tradingStatus').textContent = '⏳ Waiting for market...';
                     document.getElementById('strikeTableBody').innerHTML =
-                        '<tr><td colspan="5" style="text-align:center;color:#444;padding:20px 0;">Waiting for market open...</td></tr>';
+                        '<tr><td colspan="5" style="text-align:center;color:#444;padding:16px 0;">No data</td></tr>';
                 }
             } catch (err) {
-                console.error('Error fetching data:', err);
-                document.getElementById('tradingStatus').textContent = '❌ Error: ' + err.message;
+                console.error(err);
             }
         }
 
@@ -1427,16 +1027,9 @@
                     .order('flipped_at', { ascending: false })
                     .limit(10);
 
-                if (error) {
-                    console.error('Flip fetch error:', error);
-                    return;
-                }
-
-                const container = document.getElementById('flipList');
-
-                if (!data || data.length === 0) {
-                    container.innerHTML =
-                        '<div style="text-align:center;color:#444;padding:10px 0;font-size:0.8em;">No flips yet</div>';
+                if (error || !data || data.length === 0) {
+                    document.getElementById('flipList').innerHTML =
+                        '<div style="text-align:center;color:#444;padding:6px 0;font-size:0.65em;">No flips yet</div>';
                     return;
                 }
 
@@ -1454,11 +1047,9 @@
                         </div>
                     `;
                 });
-
-                container.innerHTML = html;
-
+                document.getElementById('flipList').innerHTML = html;
             } catch (err) {
-                console.error('Flip fetch error:', err);
+                console.error(err);
             }
         }
 
@@ -1466,7 +1057,7 @@
         // REALTIME
         // =============================================
         function setupRealtime() {
-            const channel = sb
+            sb
                 .channel('option-updates')
                 .on('postgres_changes', {
                     event: 'INSERT',
@@ -1477,32 +1068,47 @@
                     fetchFlips();
                 })
                 .subscribe();
+        }
 
-            return channel;
+        // =============================================
+        // RESIZE CHARTS
+        // =============================================
+        function resizeCharts() {
+            Object.keys(charts).forEach(key => {
+                if (charts[key]) {
+                    const container = document.getElementById(
+                        key === 'atm' ? 'chartATM' : key === 'minus1' ? 'chartMinus1' : 'chartPlus1'
+                    );
+                    if (container) {
+                        const rect = container.getBoundingClientRect();
+                        const width = rect.width || container.clientWidth || 300;
+                        charts[key].resize(width, 140);
+                    }
+                }
+            });
         }
 
         // =============================================
         // INIT
         // =============================================
         async function init() {
+            // Give DOM time to render
+            await new Promise(r => setTimeout(r, 100));
             initCharts();
             await fetchLatestData();
             await fetchFlips();
             setupRealtime();
             setInterval(fetchLatestData, 10000);
             setInterval(fetchFlips, 30000);
-        }
 
-        window.addEventListener('resize', () => {
-            Object.keys(charts).forEach(key => {
-                if (charts[key]) {
-                    const container = document.getElementById(
-                        key === 'atm' ? 'chartATM' : key === 'minus1' ? 'chartMinus1' : 'chartPlus1'
-                    );
-                    charts[key].resize(container.clientWidth, 150);
-                }
+            // Resize on orientation change
+            window.addEventListener('resize', () => {
+                setTimeout(resizeCharts, 200);
             });
-        });
+            window.addEventListener('orientationchange', () => {
+                setTimeout(resizeCharts, 500);
+            });
+        }
 
         init();
     </script>
