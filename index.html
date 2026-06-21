@@ -9,56 +9,15 @@
     </script>
     
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #0a0e17; color: #e0e0e0; padding: 10px; min-height: 100vh; overflow-x: hidden; }
+        .container { max-width: 480px; margin: 0 auto; position: relative; z-index: 1; }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background: #0a0e17;
-            color: #e0e0e0;
-            padding: 10px;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
+        .header { text-align: center; padding: 10px 0 14px; border-bottom: 1px solid rgba(0,212,255,0.08); margin-bottom: 12px; }
+        .header h1 { color: #00d4ff; font-size: 1.2em; font-weight: 600; }
+        .header .subtitle { color: #555; font-size: 0.6em; margin-top: 2px; }
 
-        .container {
-            max-width: 480px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 1;
-        }
-
-        .header {
-            text-align: center;
-            padding: 10px 0 14px;
-            border-bottom: 1px solid rgba(0, 212, 255, 0.08);
-            margin-bottom: 12px;
-        }
-
-        .header h1 {
-            color: #00d4ff;
-            font-size: 1.2em;
-            font-weight: 600;
-        }
-
-        .header .subtitle {
-            color: #555;
-            font-size: 0.6em;
-            margin-top: 2px;
-        }
-
-        .sentiment-badge {
-            display: inline-block;
-            padding: 5px 18px;
-            border-radius: 14px;
-            font-size: 0.85em;
-            font-weight: 600;
-            margin: 6px 0 4px;
-        }
-
+        .sentiment-badge { display: inline-block; padding: 5px 18px; border-radius: 14px; font-size: 0.85em; font-weight: 600; margin: 6px 0 4px; }
         .bullish { background: rgba(0,200,83,0.12); color: #00c853; border: 1px solid rgba(0,200,83,0.15); }
         .mild-bullish { background: rgba(255,214,0,0.1); color: #ffd600; border: 1px solid rgba(255,214,0,0.12); }
         .bearish { background: rgba(211,47,47,0.12); color: #ef5350; border: 1px solid rgba(211,47,47,0.15); }
@@ -66,17 +25,7 @@
         .risky { background: rgba(255,152,0,0.1); color: #ff9800; border: 1px solid rgba(255,152,0,0.12); }
         .trap { background: rgba(158,158,158,0.1); color: #9e9e9e; border: 1px solid rgba(158,158,158,0.12); }
 
-        .spot-card {
-            background: linear-gradient(135deg, #141b2d, #1a2335);
-            border-radius: 10px;
-            padding: 12px 14px;
-            margin-bottom: 12px;
-            border: 1px solid rgba(0, 212, 255, 0.05);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
+        .spot-card { background: linear-gradient(135deg, #141b2d, #1a2335); border-radius: 10px; padding: 12px 14px; margin-bottom: 12px; border: 1px solid rgba(0,212,255,0.05); display: flex; justify-content: space-between; align-items: center; }
         .spot-price { font-size: 1.6em; font-weight: 700; color: #fff; }
         .spot-time { font-size: 0.55em; color: #555; margin-top: 2px; }
         .spot-right { text-align: right; }
@@ -85,36 +34,10 @@
         .spot-atm { font-size: 0.55em; color: #666; margin-top: 2px; }
         .spot-atm span { color: #ffd600; font-weight: 600; }
 
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-            margin-bottom: 12px;
-        }
-
-        .card {
-            background: #141b2d;
-            border-radius: 10px;
-            padding: 10px 12px;
-            border: 1px solid rgba(255,255,255,0.03);
-        }
-
-        .card-title {
-            font-size: 0.45em;
-            text-transform: uppercase;
-            color: #555;
-            letter-spacing: 0.5px;
-            font-weight: 600;
-            margin-bottom: 6px;
-        }
-
-        .stat-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 2px 0;
-            font-size: 0.7em;
-        }
-
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+        .card { background: #141b2d; border-radius: 10px; padding: 10px 12px; border: 1px solid rgba(255,255,255,0.03); }
+        .card-title { font-size: 0.45em; text-transform: uppercase; color: #555; letter-spacing: 0.5px; font-weight: 600; margin-bottom: 6px; }
+        .stat-row { display: flex; justify-content: space-between; padding: 2px 0; font-size: 0.7em; }
         .stat-row .label { color: #666; }
         .stat-row .value { color: #fff; font-weight: 600; }
         .stat-row .positive { color: #ef5350; }
@@ -123,111 +46,27 @@
         .stat-row .down { color: #ef5350; }
         .stat-row .stable { color: #ffd600; }
 
-        .side-card {
-            background: #141b2d;
-            border-radius: 10px;
-            padding: 10px 12px;
-            border: 1px solid rgba(255,255,255,0.03);
-            margin-bottom: 12px;
-        }
-
-        .side-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-
-        .side-col .side-label {
-            font-size: 0.45em;
-            text-transform: uppercase;
-            color: #555;
-            letter-spacing: 0.5px;
-            font-weight: 600;
-            margin-bottom: 4px;
-            text-align: center;
-        }
-
+        .side-card { background: #141b2d; border-radius: 10px; padding: 10px 12px; border: 1px solid rgba(255,255,255,0.03); margin-bottom: 12px; }
+        .side-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .side-col .side-label { font-size: 0.45em; text-transform: uppercase; color: #555; letter-spacing: 0.5px; font-weight: 600; margin-bottom: 4px; text-align: center; }
         .side-col .side-label.ce { color: #ef5350; }
         .side-col .side-label.pe { color: #4caf50; }
         .side-col .stat-row { font-size: 0.65em; padding: 2px 0; }
 
-        .chart-card {
-            background: #141b2d;
-            border-radius: 10px;
-            padding: 10px 8px;
-            border: 1px solid rgba(255,255,255,0.03);
-            margin-bottom: 12px;
-        }
+        .chart-card { background: #141b2d; border-radius: 10px; padding: 10px 8px; border: 1px solid rgba(255,255,255,0.03); margin-bottom: 12px; }
+        .chart-card .card-title { margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 4px; }
+        .chart-container { width: 100%; height: 180px; }
 
-        .chart-card .card-title {
-            margin-bottom: 4px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 4px;
-        }
-
-        .chart-container {
-            width: 100%;
-            height: 180px;
-        }
-
-        .strike-selector {
-            display: flex;
-            gap: 6px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .strike-selector select {
-            background: #1a2335;
-            color: #e0e0e0;
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 6px;
-            padding: 4px 10px;
-            font-size: 0.65em;
-            font-weight: 600;
-            outline: none;
-            cursor: pointer;
-            max-width: 100px;
-        }
-
+        .strike-selector { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+        .strike-selector select { background: #1a2335; color: #e0e0e0; border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; padding: 4px 10px; font-size: 0.65em; font-weight: 600; outline: none; cursor: pointer; max-width: 100px; }
         .strike-selector select option { background: #141b2d; color: #e0e0e0; }
         .strike-selector .strike-label { color: #555; font-size: 0.6em; }
         .strike-selector .strike-badge { font-size: 0.55em; padding: 2px 8px; border-radius: 4px; background: rgba(0,212,255,0.08); border: 1px solid rgba(0,212,255,0.06); }
 
-        .table-card {
-            background: #141b2d;
-            border-radius: 10px;
-            padding: 10px 8px;
-            border: 1px solid rgba(255,255,255,0.03);
-            margin-bottom: 12px;
-            overflow-x: auto;
-        }
-
-        .strike-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.55em;
-            min-width: 300px;
-        }
-
-        .strike-table th {
-            background: rgba(255,255,255,0.02);
-            color: #555;
-            padding: 4px 3px;
-            text-align: center;
-            font-weight: 500;
-            border-bottom: 1px solid rgba(255,255,255,0.04);
-        }
-
-        .strike-table td {
-            padding: 4px 3px;
-            text-align: center;
-            border-bottom: 1px solid rgba(255,255,255,0.02);
-        }
-
+        .table-card { background: #141b2d; border-radius: 10px; padding: 10px 8px; border: 1px solid rgba(255,255,255,0.03); margin-bottom: 12px; overflow-x: auto; }
+        .strike-table { width: 100%; border-collapse: collapse; font-size: 0.55em; min-width: 300px; }
+        .strike-table th { background: rgba(255,255,255,0.02); color: #555; padding: 4px 3px; text-align: center; font-weight: 500; border-bottom: 1px solid rgba(255,255,255,0.04); }
+        .strike-table td { padding: 4px 3px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.02); }
         .atm-cell { background: rgba(0,180,255,0.08)!important; }
         .ce-100 { background: rgba(255,80,80,0.15)!important; font-weight: 600; }
         .pe-100 { background: rgba(80,200,80,0.15)!important; font-weight: 600; }
@@ -238,23 +77,8 @@
         .strike-middle { font-weight: 700; color: #00d4ff; font-size: 1.1em; }
         .strike-diff { font-size: 0.7em; font-weight: 500; }
 
-        .flip-card {
-            background: #141b2d;
-            border-radius: 10px;
-            padding: 10px 12px;
-            border: 1px solid rgba(255,255,255,0.03);
-            margin-bottom: 12px;
-        }
-
-        .flip-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 3px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.02);
-            font-size: 0.65em;
-        }
-
+        .flip-card { background: #141b2d; border-radius: 10px; padding: 10px 12px; border: 1px solid rgba(255,255,255,0.03); margin-bottom: 12px; }
+        .flip-item { display: flex; justify-content: space-between; align-items: center; padding: 3px 0; border-bottom: 1px solid rgba(255,255,255,0.02); font-size: 0.65em; }
         .flip-item:last-child { border-bottom: none; }
         .flip-time { color: #555; font-size: 0.8em; }
         .flip-sentiment.bullish { color: #00c853; }
@@ -263,37 +87,14 @@
         .flip-arrow { color: #444; margin: 0 4px; }
         .flip-price { color: #777; }
 
-        .status {
-            text-align: center;
-            padding: 8px 0;
-            color: #444;
-            font-size: 0.5em;
-            border-top: 1px solid rgba(255,255,255,0.03);
-            margin-top: 4px;
-            line-height: 1.6;
-        }
-
+        .status { text-align: center; padding: 8px 0; color: #444; font-size: 0.5em; border-top: 1px solid rgba(255,255,255,0.03); margin-top: 4px; line-height: 1.6; }
         .status .live { color: #00c853; font-weight: 600; }
         .status a { color: #00d4ff; text-decoration: none; }
         .live-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 4px; background: #00c853; animation: blink 1.5s ease-in-out infinite; }
         @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
 
-        @media (max-width: 400px) {
-            body { padding: 6px; }
-            .spot-price { font-size: 1.3em; }
-            .grid-2 { gap: 5px; }
-            .card { padding: 8px 8px; }
-            .side-grid { gap: 6px; }
-            .strike-table { font-size: 0.45em; min-width: 260px; }
-            .chart-container { height: 150px; }
-            .strike-selector select { font-size: 0.55em; max-width: 80px; }
-        }
-
-        @media (min-width: 768px) {
-            .container { max-width: 600px; }
-            .chart-container { height: 200px; }
-        }
-
+        @media (max-width: 400px) { body { padding: 6px; } .spot-price { font-size: 1.3em; } .grid-2 { gap: 5px; } .card { padding: 8px 8px; } .side-grid { gap: 6px; } .strike-table { font-size: 0.45em; min-width: 260px; } .chart-container { height: 150px; } .strike-selector select { font-size: 0.55em; max-width: 80px; } }
+        @media (min-width: 768px) { .container { max-width: 600px; } .chart-container { height: 200px; } }
         ::-webkit-scrollbar { width: 2px; height: 2px; }
         ::-webkit-scrollbar-track { background: #0a0e17; }
         ::-webkit-scrollbar-thumb { background: #1a2a3a; border-radius: 2px; }
@@ -421,7 +222,13 @@
                 secondsVisible: false,
                 tickMarkFormatter: (time) => {
                     const d = new Date(time * 1000);
-                    return d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: false });
+                    // Convert UTC to IST (+5:30)
+                    const istTime = new Date(d.getTime() + (5.5 * 60 * 60 * 1000));
+                    return istTime.toLocaleTimeString('en-IN', { 
+                        hour: '2-digit', 
+                        minute: '2-digit', 
+                        hour12: false 
+                    });
                 }
             },
             crosshair: { mode: LightweightCharts.CrosshairMode.Normal }
@@ -582,7 +389,6 @@
             if (currentStrike) {
                 fetchChartHistory(currentStrike);
             } else {
-                // Default to ATM
                 const atm = data.strike_data.find(s => s.is_atm);
                 if (atm) {
                     currentStrike = atm.strike;
@@ -610,7 +416,6 @@
             selector.appendChild(opt);
         });
 
-        // Set default to ATM
         const atm = strikes.find(s => s.is_atm);
         if (atm) {
             selector.value = atm.strike;
