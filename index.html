@@ -365,7 +365,7 @@
         }
 
         /* =============================================
-           FLIP HISTORY (Small)
+           FLIP HISTORY
            ============================================= */
         .flip-card {
             background: #141b2d;
@@ -655,7 +655,7 @@
 
     <script>
         // =============================================
-        // SUPABASE CONFIG
+        // SUPABASE CONFIG - YOUR CORRECT DETAILS
         // =============================================
         const SUPABASE_URL = 'https://imwqexfibkanqldjocmt.supabase.co';
         const SUPABASE_KEY =
@@ -721,7 +721,6 @@
                 peLine = init.peLine;
             }
 
-            // Limit to last 40 data points
             const maxPoints = 40;
             if (ceData && ceData.length > maxPoints) ceData = ceData.slice(-maxPoints);
             if (peData && peData.length > maxPoints) peData = peData.slice(-maxPoints);
@@ -797,12 +796,17 @@
         // UPDATE DISPLAY
         // =============================================
         function updateDisplay(data) {
-            if (!data) return;
+            if (!data) {
+                console.log('No data received');
+                return;
+            }
+
+            console.log('Updating display with data:', data);
 
             // Spot & Time
             document.getElementById('spotPrice').textContent = formatNumber(data.spot_price);
             document.getElementById('lastUpdate').textContent = 'Last Updated: ' + formatTime(data.last_updated || data
-            .created_at);
+                .created_at);
             document.getElementById('atmStrike').textContent = formatNumber(data.atm_strike);
             document.getElementById('expiryDisplay').textContent = data.expiry || '--';
 
@@ -845,7 +849,6 @@
             // Strike Table
             if (data.strike_data && data.strike_data.length > 0) {
                 updateStrikeTable(data.strike_data);
-                // Update chart with latest data
                 updateChartFromStrikes(data.strike_data, data.atm_strike);
             } else {
                 document.getElementById('strikeTableBody').innerHTML =
@@ -903,22 +906,30 @@
         // CHART UPDATE
         // =============================================
         function updateChartFromStrikes(strikes, atmStrike) {
-            // Find ATM, ATM+1, ATM-1 strikes
             const atmData = strikes.find(s => s.is_atm);
             const atmPlus = strikes.find(s => s.strike === atmStrike + 50);
             const atmMinus = strikes.find(s => s.strike === atmStrike - 50);
 
-            // Use ATM OI values (or nearest available)
-            const ceVal = atmData ? atmData.ce_oi : 0;
-            const peVal = atmData ? atmData.pe_oi : 0;
+            let ceVal = 0;
+            let peVal = 0;
 
-            // If ATM data exists, add to chart
+            // Use ATM data if available, otherwise use nearest
+            if (atmData) {
+                ceVal = atmData.ce_oi;
+                peVal = atmData.pe_oi;
+            } else if (atmMinus) {
+                ceVal = atmMinus.ce_oi;
+                peVal = atmMinus.pe_oi;
+            } else if (atmPlus) {
+                ceVal = atmPlus.ce_oi;
+                peVal = atmPlus.pe_oi;
+            }
+
             if (ceVal > 0 || peVal > 0) {
                 chartTimeIndex++;
                 chartCeData.push({ time: chartTimeIndex, value: ceVal });
                 chartPeData.push({ time: chartTimeIndex, value: peVal });
 
-                // Keep last 40 points
                 if (chartCeData.length > 40) chartCeData.shift();
                 if (chartPeData.length > 40) chartPeData.shift();
 
@@ -931,6 +942,7 @@
         // =============================================
         async function fetchLatestData() {
             try {
+                console.log('Fetching latest data...');
                 const { data, error } = await sb
                     .from('option_analysis')
                     .select('*')
@@ -943,12 +955,15 @@
                     return;
                 }
 
+                console.log('Data fetched:', data);
+
                 if (data && data.length > 0) {
                     updateDisplay(data[0]);
                 } else {
-                    document.getElementById('tradingStatus').textContent = '⏳ No data found';
+                    console.log('No data found in option_analysis');
+                    document.getElementById('tradingStatus').textContent = '⏳ No data found (market closed)';
                     document.getElementById('strikeTableBody').innerHTML =
-                        '<tr><td colspan="5" style="text-align:center;color:#444;padding:20px 0;">No data</td></tr>';
+                        '<tr><td colspan="5" style="text-align:center;color:#444;padding:20px 0;">Waiting for market open...</td></tr>';
                 }
             } catch (err) {
                 console.error('Error fetching data:', err);
@@ -1013,6 +1028,7 @@
                     schema: 'public',
                     table: 'option_analysis'
                 }, payload => {
+                    console.log('Realtime update received:', payload);
                     updateDisplay(payload.new);
                     fetchFlips();
                 })
@@ -1025,11 +1041,13 @@
         // INIT
         // =============================================
         async function init() {
+            console.log('Initializing...');
             await fetchLatestData();
             await fetchFlips();
             setupRealtime();
             setInterval(fetchLatestData, 10000);
             setInterval(fetchFlips, 30000);
+            console.log('Init complete');
         }
 
         // Handle chart resize
