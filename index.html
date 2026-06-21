@@ -256,7 +256,7 @@
 
         @keyframes slideIn {
             0% {
-                transform: translateY(20px);
+                transform: translateY(30px);
                 opacity: 0;
             }
             100% {
@@ -283,6 +283,65 @@
         @keyframes chartGlow {
             0%, 100% { box-shadow: 0 0 20px rgba(0, 212, 255, 0.05); }
             50% { box-shadow: 0 0 40px rgba(0, 212, 255, 0.15); }
+        }
+
+        /* 13. Rain Effect */
+        .rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .rain-drop {
+            position: absolute;
+            width: 1px;
+            background: linear-gradient(to bottom, transparent, rgba(0, 212, 255, 0.1));
+            animation: rainFall linear infinite;
+        }
+
+        @keyframes rainFall {
+            0% {
+                transform: translateY(-100px);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh);
+                opacity: 0;
+            }
+        }
+
+        /* 14. Sparkle */
+        .sparkle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 0;
+            animation: sparkleAnim 3s ease-in-out infinite;
+        }
+
+        @keyframes sparkleAnim {
+            0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
+            50% { opacity: 1; transform: scale(1) rotate(180deg); }
+        }
+
+        /* 15. Border Glow Pulse */
+        .border-pulse {
+            animation: borderPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes borderPulse {
+            0%, 100% { border-color: rgba(0, 212, 255, 0.08); }
+            50% { border-color: rgba(0, 212, 255, 0.3); }
         }
 
         /* =============================================
@@ -841,6 +900,11 @@
     <div class="pulse-ring pulse-ring-2"></div>
     <div class="pulse-ring pulse-ring-3"></div>
 
+    <!-- =============================================
+    RAIN EFFECT
+    ============================================= -->
+    <div class="rain" id="rain"></div>
+
     <div class="container">
 
         <!-- =============================================
@@ -855,7 +919,7 @@
         <!-- =============================================
         SPOT CARD
         ============================================= -->
-        <div class="spot-card shimmer slide-in" style="animation-delay:0.1s;">
+        <div class="spot-card shimmer slide-in border-pulse" style="animation-delay:0.1s;">
             <div class="spot-left">
                 <div class="spot-price">
                     <span id="spotPrice">-</span>
@@ -911,17 +975,17 @@
         ============================================= -->
         <div class="chart-grid slide-in" style="animation-delay:0.5s;">
             <!-- Chart 1: ATM -->
-            <div class="chart-card card-lift chart-glow">
+            <div class="chart-card card-lift chart-glow border-pulse">
                 <div class="card-title">📍 ATM OI</div>
                 <div class="chart-container" id="chartATM"></div>
             </div>
             <!-- Chart 2: ATM - 1 (OTM Put) -->
-            <div class="chart-card card-lift chart-glow">
+            <div class="chart-card card-lift chart-glow border-pulse">
                 <div class="card-title">🔻 ATM - 1 (OTM Put)</div>
                 <div class="chart-container" id="chartMinus1"></div>
             </div>
             <!-- Chart 3: ATM + 1 (OTM Call) -->
-            <div class="chart-card card-lift chart-glow">
+            <div class="chart-card card-lift chart-glow border-pulse">
                 <div class="card-title">🔺 ATM + 1 (OTM Call)</div>
                 <div class="chart-container" id="chartPlus1"></div>
             </div>
@@ -1002,6 +1066,23 @@
         })();
 
         // =============================================
+        // RAIN EFFECT
+        // =============================================
+        (function createRain() {
+            const container = document.getElementById('rain');
+            for (let i = 0; i < 60; i++) {
+                const drop = document.createElement('div');
+                drop.className = 'rain-drop';
+                drop.style.left = Math.random() * 100 + '%';
+                drop.style.height = (Math.random() * 30 + 10) + 'px';
+                drop.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                drop.style.animationDelay = (Math.random() * 5) + 's';
+                drop.style.opacity = Math.random() * 0.5 + 0.1;
+                container.appendChild(drop);
+            }
+        })();
+
+        // =============================================
         // SUPABASE CONFIG
         // =============================================
         const SUPABASE_URL = 'https://imwqexfibkanqldjocmt.supabase.co';
@@ -1011,7 +1092,7 @@
         const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         // =============================================
-        // 3 CHARTS!
+        // 3 CHARTS WITH REAL TIME!
         // =============================================
         let charts = { atm: null, minus1: null, plus1: null };
         let chartLines = { atm: { ce: null, pe: null }, minus1: { ce: null, pe: null }, plus1: { ce: null, pe: null } };
@@ -1049,6 +1130,11 @@
                         borderColor: 'rgba(255,255,255,0.05)',
                         timeVisible: true,
                         secondsVisible: false,
+                        tickMarkFormatter: (time) => {
+                            // Format time as HH:MM
+                            const date = new Date(time * 1000);
+                            return date.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: false });
+                        }
                     },
                     crosshair: {
                         mode: LightweightCharts.CrosshairMode.Normal,
@@ -1087,8 +1173,11 @@
             }
         }
 
-        function addChartDataPoint(atmStrike, strikes) {
+        function addChartDataPoint(atmStrike, strikes, currentTime) {
             chartTimeIndex++;
+
+            // Use actual timestamp for charts
+            const timestamp = Math.floor(currentTime / 1000);
 
             // Find ATM, ATM-1, ATM+1
             const atmData = strikes.find(s => s.is_atm);
@@ -1097,22 +1186,22 @@
 
             // ATM Chart
             if (atmData) {
-                chartData.atm.ce.push({ time: chartTimeIndex, value: atmData.ce_oi || 0 });
-                chartData.atm.pe.push({ time: chartTimeIndex, value: atmData.pe_oi || 0 });
+                chartData.atm.ce.push({ time: timestamp, value: atmData.ce_oi || 0 });
+                chartData.atm.pe.push({ time: timestamp, value: atmData.pe_oi || 0 });
                 updateChartData('atm', chartData.atm.ce, chartData.atm.pe);
             }
 
             // ATM - 1 Chart
             if (atmMinus1) {
-                chartData.minus1.ce.push({ time: chartTimeIndex, value: atmMinus1.ce_oi || 0 });
-                chartData.minus1.pe.push({ time: chartTimeIndex, value: atmMinus1.pe_oi || 0 });
+                chartData.minus1.ce.push({ time: timestamp, value: atmMinus1.ce_oi || 0 });
+                chartData.minus1.pe.push({ time: timestamp, value: atmMinus1.pe_oi || 0 });
                 updateChartData('minus1', chartData.minus1.ce, chartData.minus1.pe);
             }
 
             // ATM + 1 Chart
             if (atmPlus1) {
-                chartData.plus1.ce.push({ time: chartTimeIndex, value: atmPlus1.ce_oi || 0 });
-                chartData.plus1.pe.push({ time: chartTimeIndex, value: atmPlus1.pe_oi || 0 });
+                chartData.plus1.ce.push({ time: timestamp, value: atmPlus1.ce_oi || 0 });
+                chartData.plus1.pe.push({ time: timestamp, value: atmPlus1.pe_oi || 0 });
                 updateChartData('plus1', chartData.plus1.ce, chartData.plus1.pe);
             }
         }
@@ -1167,6 +1256,12 @@
             if (!ts) return '--';
             const d = new Date(ts);
             return d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true });
+        }
+
+        function formatDate(ts) {
+            if (!ts) return '--';
+            const d = new Date(ts);
+            return d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
         }
 
         // =============================================
@@ -1230,7 +1325,9 @@
             // Strike Table
             if (data.strike_data && data.strike_data.length > 0) {
                 updateStrikeTable(data.strike_data);
-                addChartDataPoint(data.atm_strike, data.strike_data);
+                // Use actual timestamp for charts
+                const now = data.last_updated ? new Date(data.last_updated).getTime() : Date.now();
+                addChartDataPoint(data.atm_strike, data.strike_data, now);
             } else {
                 document.getElementById('strikeTableBody').innerHTML =
                     '<tr><td colspan="5" style="text-align:center;color:#444;padding:20px 0;">No data</td></tr>';
