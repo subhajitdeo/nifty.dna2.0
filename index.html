@@ -26,10 +26,10 @@
         }
 
         /* =============================================
-        INSANE ANIMATIONS - WOAHHHHH!
+        INSANE ANIMATIONS - MAXIMUM OVERDRIVE!
         ============================================= */
 
-        /* Particle background */
+        /* 1. Floating Particles Background */
         .particles {
             position: fixed;
             top: 0;
@@ -43,9 +43,6 @@
 
         .particle {
             position: absolute;
-            width: 2px;
-            height: 2px;
-            background: #00d4ff;
             border-radius: 50%;
             animation: floatParticle linear infinite;
             opacity: 0;
@@ -53,109 +50,244 @@
 
         @keyframes floatParticle {
             0% {
-                transform: translateY(100vh) scale(0);
+                transform: translateY(100vh) scale(0) rotate(0deg);
                 opacity: 0;
             }
             10% {
-                opacity: 0.8;
+                opacity: 1;
             }
             90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-10vh) scale(1) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* 2. Glowing Orb Background */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            pointer-events: none;
+            z-index: 0;
+            animation: orbFloat 20s ease-in-out infinite;
+        }
+
+        .orb-1 {
+            width: 400px;
+            height: 400px;
+            background: rgba(0, 212, 255, 0.05);
+            top: -100px;
+            left: -100px;
+            animation-delay: 0s;
+        }
+
+        .orb-2 {
+            width: 500px;
+            height: 500px;
+            background: rgba(0, 200, 83, 0.04);
+            bottom: -150px;
+            right: -150px;
+            animation-delay: -7s;
+        }
+
+        .orb-3 {
+            width: 300px;
+            height: 300px;
+            background: rgba(239, 83, 80, 0.04);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: -14s;
+        }
+
+        @keyframes orbFloat {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(50px, -30px) scale(1.1); }
+            50% { transform: translate(-20px, 40px) scale(0.9); }
+            75% { transform: translate(30px, -20px) scale(1.05); }
+        }
+
+        /* 3. Pulse Rings */
+        .pulse-ring {
+            position: fixed;
+            border-radius: 50%;
+            border: 1px solid rgba(0, 212, 255, 0.05);
+            pointer-events: none;
+            z-index: 0;
+            animation: pulseRing 8s ease-out infinite;
+        }
+
+        .pulse-ring-1 {
+            width: 300px;
+            height: 300px;
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .pulse-ring-2 {
+            width: 500px;
+            height: 500px;
+            bottom: 10%;
+            right: 5%;
+            animation-delay: -3s;
+        }
+
+        .pulse-ring-3 {
+            width: 200px;
+            height: 200px;
+            top: 60%;
+            left: 50%;
+            animation-delay: -6s;
+        }
+
+        @keyframes pulseRing {
+            0% {
+                transform: scale(0.5);
                 opacity: 0.8;
             }
             100% {
-                transform: translateY(-10vh) scale(1);
+                transform: scale(2);
                 opacity: 0;
             }
         }
 
-        /* Glow pulse on sentiment */
+        /* 4. Text Glow Animation */
+        .text-glow {
+            animation: textGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes textGlow {
+            0%, 100% { text-shadow: 0 0 20px rgba(0, 212, 255, 0.1); }
+            50% { text-shadow: 0 0 40px rgba(0, 212, 255, 0.5), 0 0 80px rgba(0, 212, 255, 0.2), 0 0 120px rgba(0, 212, 255, 0.1); }
+        }
+
+        /* 5. Sentiment Glow */
         .sentiment-glow {
-            animation: glowPulse 2s ease-in-out infinite;
+            animation: sentimentPulse 2s ease-in-out infinite;
         }
 
-        @keyframes glowPulse {
+        @keyframes sentimentPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* 6. Number Pop Animation */
+        .pop-in {
+            animation: popIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        @keyframes popIn {
             0% {
-                box-shadow: 0 0 20px rgba(0, 212, 255, 0.1);
-            }
-            50% {
-                box-shadow: 0 0 60px rgba(0, 212, 255, 0.4), 0 0 120px rgba(0, 212, 255, 0.1);
-            }
-            100% {
-                box-shadow: 0 0 20px rgba(0, 212, 255, 0.1);
-            }
-        }
-
-        /* Number counter animation */
-        .value-animate {
-            animation: numberPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-        }
-
-        @keyframes numberPop {
-            0% {
-                transform: scale(0.5);
+                transform: scale(0.3) rotate(-10deg);
                 opacity: 0;
             }
             100% {
-                transform: scale(1);
+                transform: scale(1) rotate(0deg);
                 opacity: 1;
             }
         }
 
-        /* Sentiment badge pulse */
-        .sentiment-badge {
-            animation: badgePulse 3s ease-in-out infinite;
+        /* 7. Shimmer Effect */
+        .shimmer {
+            position: relative;
+            overflow: hidden;
         }
 
-        .bullish {
-            background: rgba(0, 200, 83, 0.2);
-            color: #00c853;
-            border: 1px solid rgba(0, 200, 83, 0.3);
-            animation: bullishGlow 2s ease-in-out infinite;
-        }
-        .mild-bullish {
-            background: rgba(255, 214, 0, 0.15);
-            color: #ffd600;
-            border: 1px solid rgba(255, 214, 0, 0.25);
-        }
-        .bearish {
-            background: rgba(211, 47, 47, 0.2);
-            color: #ef5350;
-            border: 1px solid rgba(211, 47, 47, 0.3);
-            animation: bearishGlow 2s ease-in-out infinite;
-        }
-        .mild-bearish {
-            background: rgba(255, 111, 0, 0.15);
-            color: #ff6f00;
-            border: 1px solid rgba(255, 111, 0, 0.25);
-        }
-        .risky {
-            background: rgba(255, 152, 0, 0.15);
-            color: #ff9800;
-            border: 1px solid rgba(255, 152, 0, 0.25);
-            animation: riskyGlow 1.5s ease-in-out infinite;
-        }
-        .trap {
-            background: rgba(158, 158, 158, 0.15);
-            color: #9e9e9e;
-            border: 1px solid rgba(158, 158, 158, 0.25);
+        .shimmer::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent 30%, rgba(0, 212, 255, 0.03) 50%, transparent 70%);
+            animation: shimmerMove 6s ease-in-out infinite;
         }
 
-        @keyframes bullishGlow {
-            0%, 100% { box-shadow: 0 0 20px rgba(0, 200, 83, 0.1); }
-            50% { box-shadow: 0 0 50px rgba(0, 200, 83, 0.4), 0 0 100px rgba(0, 200, 83, 0.1); }
+        @keyframes shimmerMove {
+            0% { transform: translateX(-30%) rotate(0deg); }
+            100% { transform: translateX(30%) rotate(5deg); }
         }
 
-        @keyframes bearishGlow {
-            0%, 100% { box-shadow: 0 0 20px rgba(211, 47, 47, 0.1); }
-            50% { box-shadow: 0 0 50px rgba(211, 47, 47, 0.4), 0 0 100px rgba(211, 47, 47, 0.1); }
+        /* 8. Card Hover Lift */
+        .card-lift {
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
-        @keyframes riskyGlow {
-            0%, 100% { box-shadow: 0 0 20px rgba(255, 152, 0, 0.1); }
-            50% { box-shadow: 0 0 60px rgba(255, 152, 0, 0.5), 0 0 120px rgba(255, 152, 0, 0.15); }
+        .card-lift:hover {
+            transform: translateY(-4px) scale(1.01);
+            border-color: rgba(0, 212, 255, 0.2);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
         }
 
-        /* Container */
+        /* 9. Live Pulse Dot */
+        .live-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 6px;
+            background: #00c853;
+            animation: dotPulse 1.2s ease-in-out infinite;
+            box-shadow: 0 0 20px rgba(0, 200, 83, 0.3);
+        }
+
+        @keyframes dotPulse {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+                box-shadow: 0 0 20px rgba(0, 200, 83, 0.3);
+            }
+            50% {
+                opacity: 0.3;
+                transform: scale(1.5);
+                box-shadow: 0 0 40px rgba(0, 200, 83, 0.6);
+            }
+        }
+
+        /* 10. Slide In */
+        .slide-in {
+            animation: slideIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        @keyframes slideIn {
+            0% {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* 11. Flip Item Pulse */
+        .flip-item {
+            animation: flipPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes flipPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* 12. Chart Glow */
+        .chart-glow {
+            animation: chartGlow 4s ease-in-out infinite;
+        }
+
+        @keyframes chartGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(0, 212, 255, 0.05); }
+            50% { box-shadow: 0 0 40px rgba(0, 212, 255, 0.15); }
+        }
+
+        /* =============================================
+        BASE STYLES
+        ============================================= */
         .container {
             max-width: 480px;
             margin: 0 auto;
@@ -163,9 +295,6 @@
             z-index: 1;
         }
 
-        /* =============================================
-        HEADER
-        ============================================= */
         .header {
             text-align: center;
             padding: 16px 0 20px;
@@ -179,12 +308,6 @@
             font-size: 1.5em;
             font-weight: 600;
             letter-spacing: -0.5px;
-            animation: textGlow 3s ease-in-out infinite;
-        }
-
-        @keyframes textGlow {
-            0%, 100% { text-shadow: 0 0 20px rgba(0, 212, 255, 0.1); }
-            50% { text-shadow: 0 0 40px rgba(0, 212, 255, 0.4), 0 0 80px rgba(0, 212, 255, 0.1); }
         }
 
         .header .subtitle {
@@ -205,9 +328,58 @@
             transition: all 0.5s ease;
         }
 
-        /* =============================================
-        SPOT CARD
-        ============================================= */
+        .bullish {
+            background: rgba(0, 200, 83, 0.2);
+            color: #00c853;
+            border: 1px solid rgba(0, 200, 83, 0.3);
+            box-shadow: 0 0 30px rgba(0, 200, 83, 0.1);
+            animation: bullishGlow 2s ease-in-out infinite;
+        }
+        .mild-bullish {
+            background: rgba(255, 214, 0, 0.15);
+            color: #ffd600;
+            border: 1px solid rgba(255, 214, 0, 0.25);
+        }
+        .bearish {
+            background: rgba(211, 47, 47, 0.2);
+            color: #ef5350;
+            border: 1px solid rgba(211, 47, 47, 0.3);
+            box-shadow: 0 0 30px rgba(211, 47, 47, 0.1);
+            animation: bearishGlow 2s ease-in-out infinite;
+        }
+        .mild-bearish {
+            background: rgba(255, 111, 0, 0.15);
+            color: #ff6f00;
+            border: 1px solid rgba(255, 111, 0, 0.25);
+        }
+        .risky {
+            background: rgba(255, 152, 0, 0.15);
+            color: #ff9800;
+            border: 1px solid rgba(255, 152, 0, 0.25);
+            box-shadow: 0 0 30px rgba(255, 152, 0, 0.1);
+            animation: riskyGlow 1.5s ease-in-out infinite;
+        }
+        .trap {
+            background: rgba(158, 158, 158, 0.15);
+            color: #9e9e9e;
+            border: 1px solid rgba(158, 158, 158, 0.25);
+        }
+
+        @keyframes bullishGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(0, 200, 83, 0.1); }
+            50% { box-shadow: 0 0 60px rgba(0, 200, 83, 0.3), 0 0 100px rgba(0, 200, 83, 0.1); }
+        }
+
+        @keyframes bearishGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(211, 47, 47, 0.1); }
+            50% { box-shadow: 0 0 60px rgba(211, 47, 47, 0.3), 0 0 100px rgba(211, 47, 47, 0.1); }
+        }
+
+        @keyframes riskyGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 152, 0, 0.1); }
+            50% { box-shadow: 0 0 60px rgba(255, 152, 0, 0.3), 0 0 100px rgba(255, 152, 0, 0.1); }
+        }
+
         .spot-card {
             background: linear-gradient(135deg, #141b2d 0%, #1a2335 100%);
             border-radius: 12px;
@@ -219,22 +391,6 @@
             align-items: center;
             position: relative;
             overflow: hidden;
-        }
-
-        .spot-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle at 30% 50%, rgba(0, 212, 255, 0.03), transparent 60%);
-            animation: spotShimmer 8s ease-in-out infinite;
-        }
-
-        @keyframes spotShimmer {
-            0%, 100% { transform: translateX(-10%) rotate(0deg); }
-            50% { transform: translateX(10%) rotate(5deg); }
         }
 
         .spot-left {
@@ -250,12 +406,6 @@
             color: #fff;
             letter-spacing: -0.5px;
             line-height: 1.1;
-        }
-
-        .spot-price .decimal {
-            font-size: 0.6em;
-            color: #666;
-            font-weight: 400;
         }
 
         .spot-time {
@@ -295,9 +445,6 @@
             font-weight: 600;
         }
 
-        /* =============================================
-        GRID (2 Columns)
-        ============================================= */
         .grid-2 {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -310,12 +457,13 @@
             border-radius: 12px;
             padding: 14px 16px;
             border: 1px solid rgba(255, 255, 255, 0.04);
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         .card:hover {
-            border-color: rgba(0, 212, 255, 0.15);
-            transform: translateY(-1px);
+            border-color: rgba(0, 212, 255, 0.2);
+            transform: translateY(-3px) scale(1.01);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
         }
 
         .card-title {
@@ -359,20 +507,18 @@
             color: #ffd600;
         }
 
-        /* =============================================
-        CE / PE Side-by-Side
-        ============================================= */
         .side-card {
             background: #141b2d;
             border-radius: 12px;
             padding: 14px 16px;
             border: 1px solid rgba(255, 255, 255, 0.04);
             margin-bottom: 16px;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         .side-card:hover {
-            border-color: rgba(0, 212, 255, 0.1);
+            border-color: rgba(0, 212, 255, 0.15);
+            transform: translateY(-2px);
         }
 
         .side-grid {
@@ -408,7 +554,39 @@
         }
 
         /* =============================================
-        STRIKE TABLE - STRIKE IN MIDDLE!
+        3 CHARTS!
+        ============================================= */
+        .chart-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .chart-card {
+            background: #141b2d;
+            border-radius: 12px;
+            padding: 14px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .chart-card:hover {
+            border-color: rgba(0, 212, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .chart-card .card-title {
+            margin-bottom: 8px;
+        }
+
+        .chart-container {
+            width: 100%;
+            height: 150px;
+        }
+
+        /* =============================================
+        STRIKE TABLE
         ============================================= */
         .table-card {
             background: #141b2d;
@@ -417,15 +595,12 @@
             border: 1px solid rgba(255, 255, 255, 0.04);
             margin-bottom: 16px;
             overflow-x: auto;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         .table-card:hover {
-            border-color: rgba(0, 212, 255, 0.1);
-        }
-
-        .table-card .card-title {
-            margin-bottom: 10px;
+            border-color: rgba(0, 212, 255, 0.15);
+            transform: translateY(-2px);
         }
 
         .strike-table {
@@ -484,7 +659,6 @@
         .strike-price {
             font-weight: 700;
             color: #fff;
-            font-size: 1em;
         }
 
         .strike-diff {
@@ -492,36 +666,10 @@
             font-weight: 500;
         }
 
-        /* Strike in middle column - bold and centered */
-        .strike-table .strike-middle {
+        .strike-middle {
             font-weight: 700;
             color: #00d4ff;
             font-size: 1.1em;
-        }
-
-        /* =============================================
-        CHART
-        ============================================= */
-        .chart-card {
-            background: #141b2d;
-            border-radius: 12px;
-            padding: 14px 12px;
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            margin-bottom: 16px;
-            transition: all 0.3s ease;
-        }
-
-        .chart-card:hover {
-            border-color: rgba(0, 212, 255, 0.1);
-        }
-
-        .chart-card .card-title {
-            margin-bottom: 8px;
-        }
-
-        .chart-container {
-            width: 100%;
-            height: 180px;
         }
 
         /* =============================================
@@ -533,11 +681,12 @@
             padding: 14px 16px;
             border: 1px solid rgba(255, 255, 255, 0.04);
             margin-bottom: 16px;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         .flip-card:hover {
-            border-color: rgba(0, 212, 255, 0.1);
+            border-color: rgba(0, 212, 255, 0.15);
+            transform: translateY(-2px);
         }
 
         .flip-item {
@@ -588,7 +737,7 @@
         }
 
         /* =============================================
-        STATUS FOOTER
+        STATUS
         ============================================= */
         .status {
             text-align: center;
@@ -603,33 +752,6 @@
         .status .live {
             color: #00c853;
             font-weight: 600;
-            animation: livePulse 2s ease-in-out infinite;
-        }
-
-        @keyframes livePulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        .status-dot {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            margin-right: 6px;
-            background: #00c853;
-            animation: dotPulse 1.5s infinite;
-        }
-
-        @keyframes dotPulse {
-            0%, 100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-            50% {
-                opacity: 0.3;
-                transform: scale(1.5);
-            }
         }
 
         .status a {
@@ -666,11 +788,15 @@
             }
 
             .strike-table {
-                font-size: 0.6em;
+                font-size: 0.55em;
             }
 
             .flip-item {
                 font-size: 0.65em;
+            }
+
+            .chart-container {
+                height: 120px;
             }
         }
 
@@ -697,17 +823,31 @@
 <body>
 
     <!-- =============================================
-    PARTICLES BACKGROUND - WOAHHHHH!
+    PARTICLES BACKGROUND
     ============================================= -->
     <div class="particles" id="particles"></div>
+
+    <!-- =============================================
+    GLOWING ORBS
+    ============================================= -->
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <!-- =============================================
+    PULSE RINGS
+    ============================================= -->
+    <div class="pulse-ring pulse-ring-1"></div>
+    <div class="pulse-ring pulse-ring-2"></div>
+    <div class="pulse-ring pulse-ring-3"></div>
 
     <div class="container">
 
         <!-- =============================================
         HEADER
         ============================================= -->
-        <div class="header">
-            <h1>📊 NIFTY Analyzer</h1>
+        <div class="header slide-in">
+            <h1 class="text-glow">📊 NIFTY Analyzer</h1>
             <div id="sentimentDisplay"></div>
             <div class="subtitle" id="tradingStatus">Status: Checking...</div>
         </div>
@@ -715,10 +855,10 @@
         <!-- =============================================
         SPOT CARD
         ============================================= -->
-        <div class="spot-card">
+        <div class="spot-card shimmer slide-in" style="animation-delay:0.1s;">
             <div class="spot-left">
                 <div class="spot-price">
-                    <span id="spotPrice">-</span><span class="decimal"></span>
+                    <span id="spotPrice">-</span>
                 </div>
                 <div class="spot-time" id="lastUpdate">Last Updated: --</div>
             </div>
@@ -729,15 +869,15 @@
         </div>
 
         <!-- =============================================
-        GRID: Peak Strikes + Movement
+        GRID: Peak Strikes
         ============================================= -->
         <div class="grid-2">
-            <div class="card">
+            <div class="card card-lift slide-in" style="animation-delay:0.2s;">
                 <div class="card-title">⚡ CE Peak</div>
                 <div class="stat-row"><span class="label">Strike</span><span class="value" id="cePeak">-</span></div>
                 <div class="stat-row"><span class="label">Movement</span><span class="value" id="ceMovement">-</span></div>
             </div>
-            <div class="card">
+            <div class="card card-lift slide-in" style="animation-delay:0.3s;">
                 <div class="card-title">⚡ PE Peak</div>
                 <div class="stat-row"><span class="label">Strike</span><span class="value" id="pePeak">-</span></div>
                 <div class="stat-row"><span class="label">Movement</span><span class="value" id="peMovement">-</span></div>
@@ -747,7 +887,7 @@
         <!-- =============================================
         CE / PE Side-by-Side
         ============================================= -->
-        <div class="side-card">
+        <div class="side-card card-lift slide-in" style="animation-delay:0.4s;">
             <div class="side-grid">
                 <div class="side-col">
                     <div class="side-label ce">📈 CALL (CE)</div>
@@ -767,17 +907,30 @@
         </div>
 
         <!-- =============================================
-        CHART (ATM OI)
+        3 CHARTS!
         ============================================= -->
-        <div class="chart-card">
-            <div class="card-title">📈 ATM ± 1 OI</div>
-            <div class="chart-container" id="chartContainer"></div>
+        <div class="chart-grid slide-in" style="animation-delay:0.5s;">
+            <!-- Chart 1: ATM -->
+            <div class="chart-card card-lift chart-glow">
+                <div class="card-title">📍 ATM OI</div>
+                <div class="chart-container" id="chartATM"></div>
+            </div>
+            <!-- Chart 2: ATM - 1 (OTM Put) -->
+            <div class="chart-card card-lift chart-glow">
+                <div class="card-title">🔻 ATM - 1 (OTM Put)</div>
+                <div class="chart-container" id="chartMinus1"></div>
+            </div>
+            <!-- Chart 3: ATM + 1 (OTM Call) -->
+            <div class="chart-card card-lift chart-glow">
+                <div class="card-title">🔺 ATM + 1 (OTM Call)</div>
+                <div class="chart-container" id="chartPlus1"></div>
+            </div>
         </div>
 
         <!-- =============================================
-        STRIKE TABLE - STRIKE IN MIDDLE!
+        STRIKE TABLE
         ============================================= -->
-        <div class="table-card">
+        <div class="table-card card-lift slide-in" style="animation-delay:0.6s;">
             <div class="card-title">📋 Strike-wise Analysis</div>
             <div style="overflow-x: auto;">
                 <table class="strike-table" id="strikeTable">
@@ -800,7 +953,7 @@
         <!-- =============================================
         FLIP HISTORY
         ============================================= -->
-        <div class="flip-card">
+        <div class="flip-card card-lift slide-in" style="animation-delay:0.7s;">
             <div class="card-title">🔄 Recent Flips</div>
             <div id="flipList">
                 <div style="text-align:center;color:#444;padding:10px 0;font-size:0.8em;">No flips yet</div>
@@ -808,10 +961,10 @@
         </div>
 
         <!-- =============================================
-        STATUS FOOTER
+        STATUS
         ============================================= -->
-        <div class="status">
-            <span><span class="status-dot"></span> <span class="live">LIVE</span></span>
+        <div class="status slide-in" style="animation-delay:0.8s;">
+            <span><span class="live-dot"></span> <span class="live">LIVE</span></span>
             | Updates every 1 min
             | 📚 <a href="https://github.com/subhajitdeo/nifty.dna/" target="_blank">GitHub</a>
             <br>
@@ -828,26 +981,28 @@
 
     <script>
         // =============================================
-        // PARTICLES - INSANE BACKGROUND!
+        // PARTICLES
         // =============================================
         (function createParticles() {
             const container = document.getElementById('particles');
-            const count = 50;
-            for (let i = 0; i < count; i++) {
+            const colors = ['#00d4ff', '#00c853', '#ef5350', '#ffd600', '#ff9800', '#9c27b0'];
+            for (let i = 0; i < 80; i++) {
                 const particle = document.createElement('div');
                 particle.className = 'particle';
+                const size = Math.random() * 4 + 1;
                 particle.style.left = Math.random() * 100 + '%';
-                particle.style.width = (Math.random() * 3 + 1) + 'px';
-                particle.style.height = particle.style.width;
-                particle.style.animationDuration = (Math.random() * 10 + 5) + 's';
-                particle.style.animationDelay = (Math.random() * 10) + 's';
-                particle.style.background = ['#00d4ff', '#00c853', '#ef5350', '#ffd600'][Math.floor(Math.random() * 4)];
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                particle.style.animationDuration = (Math.random() * 15 + 8) + 's';
+                particle.style.animationDelay = (Math.random() * 15) + 's';
+                particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.boxShadow = `0 0 ${size * 2}px ${particle.style.background}`;
                 container.appendChild(particle);
             }
         })();
 
         // =============================================
-        // SUPABASE CONFIG - YOUR DETAILS
+        // SUPABASE CONFIG
         // =============================================
         const SUPABASE_URL = 'https://imwqexfibkanqldjocmt.supabase.co';
         const SUPABASE_KEY =
@@ -856,81 +1011,111 @@
         const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         // =============================================
-        // CHART
+        // 3 CHARTS!
         // =============================================
-        let chart = null;
-        let ceLine = null;
-        let peLine = null;
+        let charts = { atm: null, minus1: null, plus1: null };
+        let chartLines = { atm: { ce: null, pe: null }, minus1: { ce: null, pe: null }, plus1: { ce: null, pe: null } };
+        let chartData = {
+            atm: { ce: [], pe: [] },
+            minus1: { ce: [], pe: [] },
+            plus1: { ce: [], pe: [] }
+        };
+        let chartTimeIndex = 0;
 
-        function initChart() {
-            const container = document.getElementById('chartContainer');
-            chart = LightweightCharts.createChart(container, {
-                width: container.clientWidth,
-                height: 180,
-                layout: {
-                    background: { color: 'transparent' },
-                    textColor: '#555',
-                },
-                grid: {
-                    vertLines: { color: 'rgba(255,255,255,0.03)' },
-                    horzLines: { color: 'rgba(255,255,255,0.03)' },
-                },
-                rightPriceScale: {
-                    borderColor: 'rgba(255,255,255,0.05)',
-                },
-                timeScale: {
-                    borderColor: 'rgba(255,255,255,0.05)',
-                    timeVisible: true,
-                    secondsVisible: false,
-                },
-                crosshair: {
-                    mode: LightweightCharts.CrosshairMode.Normal,
-                },
+        function initCharts() {
+            const containers = {
+                atm: document.getElementById('chartATM'),
+                minus1: document.getElementById('chartMinus1'),
+                plus1: document.getElementById('chartPlus1')
+            };
+
+            Object.keys(containers).forEach(key => {
+                const container = containers[key];
+                const chart = LightweightCharts.createChart(container, {
+                    width: container.clientWidth,
+                    height: 150,
+                    layout: {
+                        background: { color: 'transparent' },
+                        textColor: '#555',
+                    },
+                    grid: {
+                        vertLines: { color: 'rgba(255,255,255,0.03)' },
+                        horzLines: { color: 'rgba(255,255,255,0.03)' },
+                    },
+                    rightPriceScale: {
+                        borderColor: 'rgba(255,255,255,0.05)',
+                    },
+                    timeScale: {
+                        borderColor: 'rgba(255,255,255,0.05)',
+                        timeVisible: true,
+                        secondsVisible: false,
+                    },
+                    crosshair: {
+                        mode: LightweightCharts.CrosshairMode.Normal,
+                    },
+                });
+
+                const ceLine = chart.addLineSeries({
+                    color: '#ef5350',
+                    lineWidth: 2,
+                    priceLineVisible: false,
+                    lastValueVisible: true,
+                });
+
+                const peLine = chart.addLineSeries({
+                    color: '#4caf50',
+                    lineWidth: 2,
+                    priceLineVisible: false,
+                    lastValueVisible: true,
+                });
+
+                charts[key] = chart;
+                chartLines[key] = { ce: ceLine, pe: peLine };
             });
-
-            ceLine = chart.addLineSeries({
-                color: '#ef5350',
-                lineWidth: 2,
-                priceLineVisible: false,
-                lastValueVisible: true,
-            });
-
-            peLine = chart.addLineSeries({
-                color: '#4caf50',
-                lineWidth: 2,
-                priceLineVisible: false,
-                lastValueVisible: true,
-            });
-
-            return { chart, ceLine, peLine };
         }
 
-        function updateChart(ceData, peData) {
-            if (!chart) {
-                const init = initChart();
-                chart = init.chart;
-                ceLine = init.ceLine;
-                peLine = init.peLine;
-            }
-
+        function updateChartData(chartKey, ceData, peData) {
             const maxPoints = 40;
             if (ceData && ceData.length > maxPoints) ceData = ceData.slice(-maxPoints);
             if (peData && peData.length > maxPoints) peData = peData.slice(-maxPoints);
 
-            if (ceData && ceData.length > 0) {
-                ceLine.setData(ceData);
+            if (ceData && ceData.length > 0 && chartLines[chartKey].ce) {
+                chartLines[chartKey].ce.setData(ceData);
             }
-            if (peData && peData.length > 0) {
-                peLine.setData(peData);
+            if (peData && peData.length > 0 && chartLines[chartKey].pe) {
+                chartLines[chartKey].pe.setData(peData);
             }
         }
 
-        // =============================================
-        // CHART DATA STORAGE
-        // =============================================
-        let chartCeData = [];
-        let chartPeData = [];
-        let chartTimeIndex = 0;
+        function addChartDataPoint(atmStrike, strikes) {
+            chartTimeIndex++;
+
+            // Find ATM, ATM-1, ATM+1
+            const atmData = strikes.find(s => s.is_atm);
+            const atmMinus1 = strikes.find(s => s.strike === atmStrike - 50);
+            const atmPlus1 = strikes.find(s => s.strike === atmStrike + 50);
+
+            // ATM Chart
+            if (atmData) {
+                chartData.atm.ce.push({ time: chartTimeIndex, value: atmData.ce_oi || 0 });
+                chartData.atm.pe.push({ time: chartTimeIndex, value: atmData.pe_oi || 0 });
+                updateChartData('atm', chartData.atm.ce, chartData.atm.pe);
+            }
+
+            // ATM - 1 Chart
+            if (atmMinus1) {
+                chartData.minus1.ce.push({ time: chartTimeIndex, value: atmMinus1.ce_oi || 0 });
+                chartData.minus1.pe.push({ time: chartTimeIndex, value: atmMinus1.pe_oi || 0 });
+                updateChartData('minus1', chartData.minus1.ce, chartData.minus1.pe);
+            }
+
+            // ATM + 1 Chart
+            if (atmPlus1) {
+                chartData.plus1.ce.push({ time: chartTimeIndex, value: atmPlus1.ce_oi || 0 });
+                chartData.plus1.pe.push({ time: chartTimeIndex, value: atmPlus1.pe_oi || 0 });
+                updateChartData('plus1', chartData.plus1.ce, chartData.plus1.pe);
+            }
+        }
 
         // =============================================
         // HELPER FUNCTIONS
@@ -985,22 +1170,17 @@
         }
 
         // =============================================
-        // UPDATE DISPLAY WITH ANIMATIONS
+        // UPDATE DISPLAY
         // =============================================
         function updateDisplay(data) {
-            if (!data) {
-                console.log('No data received');
-                return;
-            }
+            if (!data) return;
 
-            console.log('Updating display with data:', data);
-
-            // Spot & Time
+            // Spot
             const spotEl = document.getElementById('spotPrice');
             spotEl.textContent = formatNumber(data.spot_price);
-            spotEl.classList.remove('value-animate');
+            spotEl.classList.remove('pop-in');
             void spotEl.offsetWidth;
-            spotEl.classList.add('value-animate');
+            spotEl.classList.add('pop-in');
 
             document.getElementById('lastUpdate').textContent = 'Last Updated: ' + formatTime(data.last_updated || data
                 .created_at);
@@ -1013,7 +1193,11 @@
             const el = document.getElementById('sentimentDisplay');
             let txt = sentiment;
             if (isTrap) txt = '⚠️ TRAP - NO TRADE';
-            el.innerHTML = `<div class="sentiment-badge ${getSentimentClass(sentiment)}">${txt}</div>`;
+            const badge = document.createElement('div');
+            badge.className = `sentiment-badge ${getSentimentClass(sentiment)} sentiment-glow`;
+            badge.textContent = txt;
+            el.innerHTML = '';
+            el.appendChild(badge);
 
             // Peaks
             document.getElementById('cePeak').textContent = formatNumber(data.ce_peak);
@@ -1027,13 +1211,13 @@
             pe.textContent = data.pe_movement ? `${getMovementArrow(data.pe_movement)} ${data.pe_movement}` : '-';
             pe.className = 'value ' + getMovementClass(data.pe_movement);
 
-            // Buy Side (CE)
+            // Buy Side
             document.getElementById('buyEntry').textContent = formatNumber(data.buy_entry);
             document.getElementById('buySl').textContent = formatNumber(data.buy_sl);
             document.getElementById('buyTarget').textContent = formatNumber(data.buy_target);
             document.getElementById('buyTarget2').textContent = formatNumber(data.buy_target2);
 
-            // Sell Side (PE)
+            // Sell Side
             document.getElementById('sellEntry').textContent = formatNumber(data.sell_entry);
             document.getElementById('sellSl').textContent = formatNumber(data.sell_sl);
             document.getElementById('sellTarget').textContent = formatNumber(data.sell_target);
@@ -1046,7 +1230,7 @@
             // Strike Table
             if (data.strike_data && data.strike_data.length > 0) {
                 updateStrikeTable(data.strike_data);
-                updateChartFromStrikes(data.strike_data, data.atm_strike);
+                addChartDataPoint(data.atm_strike, data.strike_data);
             } else {
                 document.getElementById('strikeTableBody').innerHTML =
                     '<tr><td colspan="5" style="text-align:center;color:#444;padding:20px 0;">No data</td></tr>';
@@ -1054,7 +1238,7 @@
         }
 
         // =============================================
-        // STRIKE TABLE - STRIKE IN MIDDLE!
+        // STRIKE TABLE
         // =============================================
         function updateStrikeTable(strikes) {
             const tbody = document.getElementById('strikeTableBody');
@@ -1106,45 +1290,10 @@
         }
 
         // =============================================
-        // CHART UPDATE
-        // =============================================
-        function updateChartFromStrikes(strikes, atmStrike) {
-            const atmData = strikes.find(s => s.is_atm);
-            const atmPlus = strikes.find(s => s.strike === atmStrike + 50);
-            const atmMinus = strikes.find(s => s.strike === atmStrike - 50);
-
-            let ceVal = 0;
-            let peVal = 0;
-
-            if (atmData) {
-                ceVal = atmData.ce_oi;
-                peVal = atmData.pe_oi;
-            } else if (atmMinus) {
-                ceVal = atmMinus.ce_oi;
-                peVal = atmMinus.pe_oi;
-            } else if (atmPlus) {
-                ceVal = atmPlus.ce_oi;
-                peVal = atmPlus.pe_oi;
-            }
-
-            if (ceVal > 0 || peVal > 0) {
-                chartTimeIndex++;
-                chartCeData.push({ time: chartTimeIndex, value: ceVal });
-                chartPeData.push({ time: chartTimeIndex, value: peVal });
-
-                if (chartCeData.length > 40) chartCeData.shift();
-                if (chartPeData.length > 40) chartPeData.shift();
-
-                updateChart(chartCeData, chartPeData);
-            }
-        }
-
-        // =============================================
-        // FETCH LATEST DATA
+        // FETCH DATA
         // =============================================
         async function fetchLatestData() {
             try {
-                console.log('Fetching latest data...');
                 const { data, error } = await sb
                     .from('option_analysis')
                     .select('*')
@@ -1157,12 +1306,9 @@
                     return;
                 }
 
-                console.log('Data fetched:', data);
-
                 if (data && data.length > 0) {
                     updateDisplay(data[0]);
                 } else {
-                    console.log('No data found in option_analysis');
                     document.getElementById('tradingStatus').textContent = '⏳ No data found (market closed)';
                     document.getElementById('strikeTableBody').innerHTML =
                         '<tr><td colspan="5" style="text-align:center;color:#444;padding:20px 0;">Waiting for market open...</td></tr>';
@@ -1174,7 +1320,7 @@
         }
 
         // =============================================
-        // FETCH FLIP HISTORY
+        // FETCH FLIPS
         // =============================================
         async function fetchFlips() {
             try {
@@ -1220,7 +1366,7 @@
         }
 
         // =============================================
-        // REALTIME SUBSCRIPTION
+        // REALTIME
         // =============================================
         function setupRealtime() {
             const channel = sb
@@ -1230,7 +1376,6 @@
                     schema: 'public',
                     table: 'option_analysis'
                 }, payload => {
-                    console.log('Realtime update received:', payload);
                     updateDisplay(payload.new);
                     fetchFlips();
                 })
@@ -1243,21 +1388,23 @@
         // INIT
         // =============================================
         async function init() {
-            console.log('Initializing...');
+            initCharts();
             await fetchLatestData();
             await fetchFlips();
             setupRealtime();
             setInterval(fetchLatestData, 10000);
             setInterval(fetchFlips, 30000);
-            console.log('Init complete');
         }
 
-        // Handle chart resize
         window.addEventListener('resize', () => {
-            if (chart) {
-                const container = document.getElementById('chartContainer');
-                chart.resize(container.clientWidth, 180);
-            }
+            Object.keys(charts).forEach(key => {
+                if (charts[key]) {
+                    const container = document.getElementById(
+                        key === 'atm' ? 'chartATM' : key === 'minus1' ? 'chartMinus1' : 'chartPlus1'
+                    );
+                    charts[key].resize(container.clientWidth, 150);
+                }
+            });
         });
 
         init();
