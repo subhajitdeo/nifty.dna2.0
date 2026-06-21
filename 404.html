@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NIFTY Analyzer</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightweight-charts@4.1.0/dist/lightweight-charts.standalone.production.js">
+    </script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0e17;
+            color: #e0e0e0;
+            padding: 10px;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* =============================================
+           HEADER
+           ============================================= */
+        .header {
+            text-align: center;
+            padding: 10px 0 14px;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.08);
+            margin-bottom: 12px;
+        }
+
+        .header h1 {
+            color: #00d4ff;
+            font-size: 1.2em;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        .header .subtitle {
+            color: #555;
+            font-size: 0.6em;
+            margin-top: 2px;
+        }
+
+        /* =============================================
+           SENTIMENT BADGE
+           ============================================= */
+        .sentiment-badge {
+            display: inline-block;
+            padding: 5px 18px;
+            border-radius: 14px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin: 6px 0 4px;
+        }
+
+        .bullish {
+            background: rgba(0, 200, 83, 0.12);
+            color: #00c853;
+            border: 1px solid rgba(0, 200, 83, 0.15);
+        }
+        .mild-bullish {
+            background: rgba(255, 214, 0, 0.1);
+            color: #ffd600;
+            border: 1px solid rgba(255, 214, 0, 0.12);
+        }
+        .bearish {
+            background: rgba(211, 47, 47, 0.12);
+            color: #ef5350;
+            border: 1px solid rgba(211, 47, 47, 0.15);
+        }
+        .mild-bearish {
+            background: rgba(255, 111, 0, 0.1);
+            color: #ff6f00;
+            border: 1px solid rgba(255, 111, 0, 0.12);
+        }
+        .risky {
+            background: rgba(255, 152, 0, 0.1);
+            color: #ff9800;
+            border: 1px solid rgba(255, 152, 0, 0.12);
+        }
+        .trap {
+            background: rgba(158, 158, 158, 0.1);
+            color: #9e9e9e;
+            border: 1px solid rgba(158, 158, 158, 0.12);
+        }
+
+        /* =============================================
+           SPOT CARD
+           ============================================= */
+        .spot-card {
+            background: linear-gradient(135deg, #141b2d 0%, #1a2335 100%);
+            border-radius: 10px;
+            padding: 12px 14px;
+            margin-bottom: 12px;
+            border: 1px solid rgba(0, 212, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .spot-left {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .spot-price {
+            font-size: 1.6em;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: -0.5px;
+            line-height: 1.1;
+        }
+
+        .spot-time {
+            font-size: 0.55em;
+            color: #555;
+            margin-top: 2px;
+        }
+
+        .spot-right {
+            text-align: right;
+        }
+
+        .spot-expiry {
+            font-size: 0.6em;
+            color: #777;
+            background: rgba(0, 212, 255, 0.04);
+            padding: 2px 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(0, 212, 255, 0.05);
+        }
+
+        .spot-expiry span {
+            color: #00d4ff;
+            font-weight: 600;
+        }
+
+        .spot-atm {
+            font-size: 0.55em;
+            color: #666;
+            margin-top: 2px;
+        }
+
+        .spot-atm span {
+            color: #ffd600;
+            font-weight: 600;
+        }
+
+        /* =============================================
+           GRID (2 Columns)
+           ============================================= */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .card {
+            background: #141b2d;
+            border-radius: 10px;
+            padding: 10px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .card-title {
+            font-size: 0.45em;
+            text-transform: uppercase;
+            color: #555;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 2px 0;
+            font-size: 0.7em;
+        }
+
+        .stat-row .label {
+            color: #666;
+        }
+
+        .stat-row .value {
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .stat-row .positive {
+            color: #ef5350;
+        }
+        .stat-row .negative {
+            color: #4caf50;
+        }
+        .stat-row .up {
+            color: #4caf50;
+        }
+        .stat-row .down {
+            color: #ef5350;
+        }
+        .stat-row .stable {
+            color: #ffd600;
+        }
+
+        /* =============================================
+           CE / PE Side-by-Side
+           ============================================= */
+        .side-card {
+            background: #141b2d;
+            border-radius: 10px;
+            padding: 10px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            margin-bottom: 12px;
+        }
+
+        .side-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .side-col {
+            padding: 0 2px;
+        }
+
+        .side-col .side-label {
+            font-size: 0.45em;
+            text-transform: uppercase;
+            color: #555;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            text-align: center;
+        }
+
+        .side-col .side-label.ce {
+            color: #ef5350;
+        }
+        .side-col .side-label.pe {
+            color: #4caf50;
+        }
+
+        .side-col .stat-row {
+            font-size: 0.65em;
+            padding: 2px 0;
+        }
+
+        /* =============================================
+           CHART
+           ============================================= */
+        .chart-card {
+            background: #141b2d;
+            border-radius: 10px;
+            padding: 10px 8px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            margin-bottom: 12px;
+        }
+
+        .chart-card .card-title {
+            margin-bottom: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .chart-container {
+            width: 100%;
+            height: 180px;
+        }
+
+        /* =============================================
+           STRIKE SELECTOR
+           ============================================= */
+        .strike-selector {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .strike-selector select {
+            background: #1a2335;
+            color: #e0e0e0;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 6px;
+            padding: 4px 10px;
+            font-size: 0.65em;
+            font-weight: 600;
+            outline: none;
+            cursor: pointer;
+            max-width: 100px;
+        }
+
+        .strike-selector select option {
+            background: #141b2d;
+            color: #e0e0e0;
+        }
+
+        .strike-selector .strike-label {
+            color: #555;
+            font-size: 0.6em;
+        }
+
+        .strike-selector .strike-badge {
+            font-size: 0.55em;
+            padding: 2px 8px;
+            border-radius: 4px;
+            background: rgba(0, 212, 255, 0.08);
+            border: 1px solid rgba(0, 212, 255, 0.06);
+        }
+
+        /* =============================================
+           STRIKE TABLE
+           ============================================= */
+        .table-card {
+            background: #141b2d;
+            border-radius: 10px;
+            padding: 10px 8px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            margin-bottom: 12px;
+            overflow-x: auto;
+        }
+
+        .strike-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.55em;
+            min-width: 300px;
+        }
+
+        .strike-table th {
+            background: rgba(255, 255, 255, 0.02);
+            color: #555;
+            padding: 4px 3px;
+            text-align: center;
+            font-weight: 500;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .strike-table td {
+            padding: 4px 3px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+        }
+
+        .atm-cell {
+            background: rgba(0, 180, 255, 0.08) !important;
+        }
+
+        .ce-100 {
+            background: rgba(255, 80, 80, 0.15) !important;
+            font-weight: 600;
+        }
+
+        .pe-100 {
+            background: rgba(80, 200, 80, 0.15) !important;
+            font-weight: 600;
+        }
+
+        .ce-strong {
+            background: rgba(255, 200, 0, 0.08) !important;
+        }
+
+        .pe-strong {
+            background: rgba(255, 200, 0, 0.08) !important;
+        }
+
+        .diff-positive {
+            color: #ef5350;
+        }
+        .diff-negative {
+            color: #4caf50;
+        }
+
+        .strike-price {
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .strike-diff {
+            font-size: 0.7em;
+            font-weight: 500;
+        }
+
+        .strike-middle {
+            font-weight: 700;
+            color: #00d4ff;
+            font-size: 1.1em;
+        }
+
+        /* =============================================
+           FLIP HISTORY
+           ============================================= */
+        .flip-card {
+            background: #141b2d;
+            border-radius: 10px;
+            padding: 10px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            margin-bottom: 12px;
+        }
+
+        .flip-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 3px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+            font-size: 0.65em;
+        }
+
+        .flip-item:last-child {
+            border-bottom: none;
+        }
+
+        .flip-time {
+            color: #555;
+            font-size: 0.8em;
+        }
+
+        .flip-sentiment.bullish {
+            color: #00c853;
+        }
+        .flip-sentiment.bearish {
+            color: #ef5350;
+        }
+        .flip-sentiment.risky {
+            color: #ff9800;
+        }
+        .flip-sentiment.mild-bullish {
+            color: #ffd600;
+        }
+        .flip-sentiment.mild-bearish {
+            color: #ff6f00;
+        }
+
+        .flip-price {
+            color: #777;
+        }
+
+        .flip-arrow {
+            color: #444;
+            margin: 0 4px;
+        }
+
+        /* =============================================
+           STATUS FOOTER
+           ============================================= */
+        .status {
+            text-align: center;
+            padding: 8px 0;
+            color: #444;
+            font-size: 0.5em;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            margin-top: 4px;
+            line-height: 1.6;
+        }
+
+        .status .live {
+            color: #00c853;
+            font-weight: 600;
+        }
+
+        .status a {
+            color: #00d4ff;
+            text-decoration: none;
+        }
+
+        .live-dot {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            margin-right: 4px;
+            background: #00c853;
+            animation: blink 1.5s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.3;
+            }
+        }
+
+        /* =============================================
+           RESPONSIVE
+           ============================================= */
+        @media (max-width: 400px) {
+            body {
+                padding: 6px;
+            }
+
+            .spot-price {
+                font-size: 1.3em;
+            }
+
+            .grid-2 {
+                gap: 5px;
+            }
+
+            .card {
+                padding: 8px 8px;
+            }
+
+            .side-grid {
+                gap: 6px;
+            }
+
+            .strike-table {
+                font-size: 0.45em;
+                min-width: 260px;
+            }
+
+            .chart-container {
+                height: 150px;
+            }
+
+            .strike-selector select {
+                font-size: 0.55em;
+                max-width: 80px;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                max-width: 600px;
+            }
+
+            .chart-container {
+                height: 200px;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 2px;
+            height: 2px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0e17;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1a2a3a;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- HEADER -->
+        <div class="header">
+            <h1>📊 NIFTY Analyzer</h1>
+            <div id="sentimentDisplay"></div>
+            <div class="subtitle" id="tradingStatus">Status: Checking...</div>
+        </div>
+
+        <!-- SPOT -->
+        <div class="spot-card">
+            <div class="spot-left">
+                <div class="spot-price"><span id="spotPrice">-</span></div>
+                <div class="spot-time" id="lastUpdate">Last Updated: --</div>
+            </div>
+            <div class="spot-right">
+                <div class="spot-expiry">📅 <span id="expiryDisplay">--</span></div>
+                <div class="spot-atm">📍 ATM: <span id="atmStrike">--</span></div>
+            </div>
+        </div>
+
+        <!-- PEAKS -->
+        <div class="grid-2">
+            <div class="card">
+                <div class="card-title">⚡ CE Peak</div>
+                <div class="stat-row"><span class="label">Strike</span><span class="value" id="cePeak">-</span></div>
+                <div class="stat-row"><span class="label">Movement</span><span class="value" id="ceMovement">-</span></div>
+            </div>
+            <div class="card">
+                <div class="card-title">⚡ PE Peak</div>
+                <div class="stat-row"><span class="label">Strike</span><span class="value" id="pePeak">-</span></div>
+                <div class="stat-row"><span class="label">Movement</span><span class="value" id="peMovement">-</span></div>
+            </div>
+        </div>
+
+        <!-- CE/PE -->
+        <div class="side-card">
+            <div class="side-grid">
+                <div class="side-col">
+                    <div class="side-label ce">📈 CALL (CE)</div>
+                    <div class="stat-row"><span class="label">Entry</span><span class="value" id="buyEntry">-</span></div>
+                    <div class="stat-row"><span class="label">Stop Loss</span><span class="value" id="buySl">-</span></div>
+                    <div class="stat-row"><span class="label">Target 1</span><span class="value" id="buyTarget">-</span></div>
+                    <div class="stat-row"><span class="label">Target 2</span><span class="value" id="buyTarget2">-</span></div>
+                </div>
+                <div class="side-col">
+                    <div class="side-label pe">📉 PUT (PE)</div>
+                    <div class="stat-row"><span class="label">Entry</span><span class="value" id="sellEntry">-</span></div>
+                    <div class="stat-row"><span class="label">Stop Loss</span><span class="value" id="sellSl">-</span></div>
+                    <div class="stat-row"><span class="label">Target 1</span><span class="value" id="sellTarget">-</span></div>
+                    <div class="stat-row"><span class="label">Target 2</span><span class="value" id="sellTarget2">-</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CHART -->
+        <div class="chart-card">
+            <div class="card-title">
+                <span>📈 OI Chart</span>
+                <div class="strike-selector">
+                    <span class="strike-label">Strike:</span>
+                    <select id="strikeSelector"></select>
+                    <span class="strike-badge" id="strikeBadge">CE</span>
+                </div>
+            </div>
+            <div class="chart-container" id="chartContainer"></div>
+        </div>
+
+        <!-- TABLE -->
+        <div class="table-card">
+            <div class="card-title">📋 Strike Analysis</div>
+            <div style="overflow-x: auto;">
+                <table class="strike-table" id="strikeTable">
+                    <thead>
+                        <tr>
+                            <th>CE OI</th>
+                            <th>CE %</th>
+                            <th style="min-width: 60px;">Strike</th>
+                            <th>PE %</th>
+                            <th>PE OI</th>
+                        </tr>
+                    </thead>
+                    <tbody id="strikeTableBody">
+                        <tr>
+                            <td colspan="5" style="text-align:center;color:#444;padding:16px 0;">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- FLIPS -->
+        <div class="flip-card">
+            <div class="card-title">🔄 Recent Flips</div>
+            <div id="flipList">
+                <div style="text-align:center;color:#444;padding:6px 0;font-size:0.65em;">No flips yet</div>
+            </div>
+        </div>
+
+        <!-- STATUS -->
+        <div class="status">
+            <span><span class="live-dot"></span> <span class="live">LIVE</span></span>
+            | 1 min | 📚 <a href="https://github.com/subhajitdeo/nifty.dna/" target="_blank">GitHub</a>
+            <br>Check my repo before using - https://github.com/subhajitdeo/nifty.dna2.0/
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+    </script>
+
+    <script>
+        // =============================================
+        // SUPABASE CONFIG
+        // =============================================
+        const SUPABASE_URL = 'https://imwqexfibkanqldjocmt.supabase.co';
+        const SUPABASE_KEY =
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imltd3FleGZpYmthbnFsZGpvY210Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE5ODU0MTIsImV4cCI6MjA5NzU2MTQxMn0.vATdjPqvAQ1H35iznWsBOdVuZepC2LRGCHeBGChufX0';
+
+        const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        // =============================================
+        // CHART
+        // =============================================
+        let chart = null;
+        let ceLine = null;
+        let peLine = null;
+        let chartData = { ce: [], pe: [] };
+        let currentStrike = null;
+
+        function initChart() {
+            const container = document.getElementById('chartContainer');
+            chart = LightweightCharts.createChart(container, {
+                width: container.clientWidth || 300,
+                height: 180,
+                layout: {
+                    background: { color: 'transparent' },
+                    textColor: '#444',
+                },
+                grid: {
+                    vertLines: { color: 'rgba(255,255,255,0.02)' },
+                    horzLines: { color: 'rgba(255,255,255,0.02)' },
+                },
+                rightPriceScale: {
+                    borderColor: 'rgba(255,255,255,0.03)',
+                },
+                timeScale: {
+                    borderColor: 'rgba(255,255,255,0.03)',
+                    timeVisible: true,
+                    secondsVisible: false,
+                    tickMarkFormatter: (time) => {
+                        const d = new Date(time * 1000);
+                        const istTime = new Date(d.getTime() + (5.5 * 60 * 60 * 1000));
+                        return istTime.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit',
+                            hour12: false });
+                    }
+                },
+                crosshair: {
+                    mode: LightweightCharts.CrosshairMode.Normal,
+                }
+            });
+
+            ceLine = chart.addLineSeries({
+                color: '#ef5350',
+                lineWidth: 2,
+                priceLineVisible: false,
+                lastValueVisible: true,
+            });
+
+            peLine = chart.addLineSeries({
+                color: '#4caf50',
+                lineWidth: 2,
+                priceLineVisible: false,
+                lastValueVisible: true,
+            });
+
+            return { chart, ceLine, peLine };
+        }
+
+        function updateChart(ceData, peData) {
+            if (!chart) {
+                const init = initChart();
+                chart = init.chart;
+                ceLine = init.ceLine;
+                peLine = init.peLine;
+            }
+
+            if (ceData && ceData.length > 0) {
+                ceLine.setData(ceData);
+            }
+            if (peData && peData.length > 0) {
+                peLine.setData(peData);
+            }
+        }
+
+        // =============================================
+        // FETCH CHART HISTORY FROM SUPABASE
+        // =============================================
+        async function fetchChartHistory(strike) {
+            try {
+                const { data, error } = await sb
+                    .from('option_analysis')
+                    .select('created_at, strike_data')
+                    .order('created_at', { ascending: true })
+                    .limit(30);
+
+                if (error || !data) {
+                    console.error('Chart history error:', error);
+                    return;
+                }
+
+                const ceData = [];
+                const peData = [];
+
+                data.forEach(record => {
+                    let strikes = record.strike_data;
+
+                    // Parse if string
+                    if (typeof strikes === 'string') {
+                        try {
+                            strikes = JSON.parse(strikes);
+                        } catch (e) {
+                            console.error('Parse error:', e);
+                            return;
+                        }
+                    }
+
+                    // Find selected strike
+                    const strikeData = Array.isArray(strikes) ? strikes.find(s => s.strike === strike) : null;
+
+                    if (strikeData) {
+                        const ts = Math.floor(new Date(record.created_at).getTime() / 1000);
+                        ceData.push({ time: ts, value: strikeData.ce_oi || 0 });
+                        peData.push({ time: ts, value: strikeData.pe_oi || 0 });
+                    }
+                });
+
+                if (ceData.length === 0) {
+                    const ts = Math.floor(Date.now() / 1000);
+                    ceData.push({ time: ts - 60, value: 0 });
+                    peData.push({ time: ts - 60, value: 0 });
+                    ceData.push({ time: ts, value: 0 });
+                    peData.push({ time: ts, value: 0 });
+                }
+
+                chartData.ce = ceData;
+                chartData.pe = peData;
+                updateChart(ceData, peData);
+
+            } catch (err) {
+                console.error('Chart history error:', err);
+            }
+        }
+
+        // =============================================
+        // HELPERS
+        // =============================================
+        function getSentimentClass(s) {
+            if (!s) return 'risky';
+            const t = s.toLowerCase();
+            if (t === 'bullish') return 'bullish';
+            if (t === 'mild bullish') return 'mild-bullish';
+            if (t === 'bearish') return 'bearish';
+            if (t === 'mild bearish') return 'mild-bearish';
+            if (t === 'trap') return 'trap';
+            return 'risky';
+        }
+
+        function getMovementClass(m) {
+            if (!m) return 'stable';
+            const t = m.toLowerCase();
+            if (t === 'up') return 'up';
+            if (t === 'down') return 'down';
+            return 'stable';
+        }
+
+        function getMovementArrow(m) {
+            if (!m) return '→';
+            const t = m.toLowerCase();
+            if (t === 'up') return '▲';
+            if (t === 'down') return '▼';
+            return '→';
+        }
+
+        function formatNumber(n) {
+            if (n === null || n === undefined || n === 0) return '-';
+            return Number(n).toLocaleString('en-IN');
+        }
+
+        function formatPercentage(n) {
+            if (n === null || n === undefined) return '-';
+            return Number(n).toFixed(1) + '%';
+        }
+
+        function formatDiff(n) {
+            if (n === null || n === undefined || n === 0) return '-';
+            if (n > 0) return '+' + formatNumber(n);
+            return formatNumber(n);
+        }
+
+        function formatTime(ts) {
+            if (!ts) return '--';
+            const d = new Date(ts);
+            return d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true });
+        }
+
+        // =============================================
+        // UPDATE DISPLAY
+        // =============================================
+        function updateDisplay(data) {
+            if (!data) return;
+
+            document.getElementById('spotPrice').textContent = formatNumber(data.spot_price);
+            document.getElementById('lastUpdate').textContent = 'Updated: ' + formatTime(data.last_updated || data
+                .created_at);
+            document.getElementById('atmStrike').textContent = formatNumber(data.atm_strike);
+            document.getElementById('expiryDisplay').textContent = data.expiry || '--';
+
+            const sentiment = data.sentiment || 'RISKY';
+            const isTrap = data.is_trap || false;
+            const el = document.getElementById('sentimentDisplay');
+            let txt = sentiment;
+            if (isTrap) txt = '⚠️ TRAP';
+            el.innerHTML = `<div class="sentiment-badge ${getSentimentClass(sentiment)}">${txt}</div>`;
+
+            document.getElementById('cePeak').textContent = formatNumber(data.ce_peak);
+            document.getElementById('pePeak').textContent = formatNumber(data.pe_peak);
+
+            const ce = document.getElementById('ceMovement');
+            ce.textContent = data.ce_movement ? `${getMovementArrow(data.ce_movement)} ${data.ce_movement}` : '-';
+            ce.className = 'value ' + getMovementClass(data.ce_movement);
+
+            const pe = document.getElementById('peMovement');
+            pe.textContent = data.pe_movement ? `${getMovementArrow(data.pe_movement)} ${data.pe_movement}` : '-';
+            pe.className = 'value ' + getMovementClass(data.pe_movement);
+
+            document.getElementById('buyEntry').textContent = formatNumber(data.buy_entry);
+            document.getElementById('buySl').textContent = formatNumber(data.buy_sl);
+            document.getElementById('buyTarget').textContent = formatNumber(data.buy_target);
+            document.getElementById('buyTarget2').textContent = formatNumber(data.buy_target2);
+            document.getElementById('sellEntry').textContent = formatNumber(data.sell_entry);
+            document.getElementById('sellSl').textContent = formatNumber(data.sell_sl);
+            document.getElementById('sellTarget').textContent = formatNumber(data.sell_target);
+            document.getElementById('sellTarget2').textContent = formatNumber(data.sell_target2);
+
+            document.getElementById('tradingStatus').textContent = data.strike_data ? '✅ Live' : '⏳ Waiting';
+
+            if (data.strike_data && data.strike_data.length > 0) {
+                allStrikes = data.strike_data;
+                updateStrikeTable(data.strike_data);
+                populateStrikeSelector(data.strike_data);
+
+                if (currentStrike) {
+                    fetchChartHistory(currentStrike);
+                } else {
+                    const atm = data.strike_data.find(s => s.is_atm);
+                    if (atm) {
+                        currentStrike = atm.strike;
+                        fetchChartHistory(currentStrike);
+                    }
+                }
+            } else {
+                document.getElementById('strikeTableBody').innerHTML =
+                    '<tr><td colspan="5" style="text-align:center;color:#444;padding:16px 0;">No data</td></tr>';
+            }
+        }
+
+        // =============================================
+        // STRIKE SELECTOR
+        // =============================================
+        function populateStrikeSelector(strikes) {
+            const selector = document.getElementById('strikeSelector');
+            selector.innerHTML = '';
+
+            const sorted = [...strikes].sort((a, b) => a.strike - b.strike);
+            sorted.forEach(s => {
+                const opt = document.createElement('option');
+                opt.value = s.strike;
+                opt.textContent = s.is_atm ? `📍 ${s.strike}` : `${s.strike}`;
+                if (s.is_atm) opt.style.color = '#ffd600';
+                selector.appendChild(opt);
+            });
+
+            const atm = strikes.find(s => s.is_atm);
+            if (atm) {
+                selector.value = atm.strike;
+                currentStrike = atm.strike;
+                document.getElementById('strikeBadge').textContent = '📍 ATM';
+            }
+
+            selector.onchange = function() {
+                currentStrike = parseInt(this.value);
+                const strike = strikes.find(s => s.strike === currentStrike);
+                if (strike) {
+                    document.getElementById('strikeBadge').textContent = strike.is_atm ? '📍 ATM' : '';
+                    fetchChartHistory(currentStrike);
+                }
+            };
+        }
+
+        // =============================================
+        // STRIKE TABLE
+        // =============================================
+        function updateStrikeTable(strikes) {
+            const tbody = document.getElementById('strikeTableBody');
+            tbody.innerHTML = '';
+
+            if (!strikes || strikes.length === 0) {
+                tbody.innerHTML =
+                    '<tr><td colspan="5" style="text-align:center;color:#444;padding:16px 0;">No data</td></tr>';
+                return;
+            }
+
+            strikes.forEach(s => {
+                const tr = document.createElement('tr');
+                const cePct = s.ce_oi_pct || 0;
+                const pePct = s.pe_oi_pct || 0;
+
+                let ceClass = '';
+                if (cePct >= 100) ceClass = 'ce-100';
+                else if (cePct >= 75) ceClass = 'ce-strong';
+
+                let peClass = '';
+                if (pePct >= 100) peClass = 'pe-100';
+                else if (pePct >= 75) peClass = 'pe-strong';
+
+                let strikeClass = '';
+                let strikeMiddleClass = '';
+                if (s.is_atm) {
+                    strikeClass = 'atm-cell';
+                    strikeMiddleClass = 'strike-middle';
+                }
+
+                const diff = s.oi_diff || 0;
+                const diffClass = diff > 0 ? 'diff-positive' : (diff < 0 ? 'diff-negative' : '');
+
+                tr.innerHTML = `
+                        <td>${formatNumber(s.ce_oi)}</td>
+                        <td class="${ceClass}">${formatPercentage(cePct)}</td>
+                        <td>
+                            <div class="${strikeClass}" style="font-weight:bold;font-size:1em;padding:2px 0;">
+                                <span class="${strikeMiddleClass}">${formatNumber(s.strike)}</span>
+                            </div>
+                            <div class="strike-diff ${diffClass}">${formatDiff(diff)}</div>
+                        </td>
+                        <td class="${peClass}">${formatPercentage(pePct)}</td>
+                        <td>${formatNumber(s.pe_oi)}</td>
+                    `;
+
+                tbody.appendChild(tr);
+            });
+        }
+
+        // =============================================
+        // FETCH DATA
+        // =============================================
+        async function fetchLatestData() {
+            try {
+                const { data, error } = await sb
+                    .from('option_analysis')
+                    .select('*')
+                    .order('created_at', { ascending: false })
+                    .limit(1);
+
+                if (error) {
+                    document.getElementById('tradingStatus').textContent = '❌ Error';
+                    return;
+                }
+
+                if (data && data.length > 0) {
+                    updateDisplay(data[0]);
+                } else {
+                    document.getElementById('tradingStatus').textContent = '⏳ Waiting for market...';
+                    document.getElementById('strikeTableBody').innerHTML =
+                        '<tr><td colspan="5" style="text-align:center;color:#444;padding:16px 0;">No data</td></tr>';
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        // =============================================
+        // FETCH FLIPS
+        // =============================================
+        async function fetchFlips() {
+            try {
+                const { data, error } = await sb
+                    .from('flip_history')
+                    .select('*')
+                    .order('flipped_at', { ascending: false })
+                    .limit(10);
+
+                if (error || !data || data.length === 0) {
+                    document.getElementById('flipList').innerHTML =
+                        '<div style="text-align:center;color:#444;padding:6px 0;font-size:0.65em;">No flips yet</div>';
+                    return;
+                }
+
+                let html = '';
+                data.forEach(f => {
+                    const sentimentClass = f.sentiment ? f.sentiment.toLowerCase().replace(' ', '-') : 'risky';
+                    html += `
+                            <div class="flip-item">
+                                <span class="flip-time">${formatTime(f.flipped_at)}</span>
+                                <span>
+                                    <span class="flip-sentiment ${sentimentClass}">${f.sentiment || '--'}</span>
+                                    <span class="flip-arrow">→</span>
+                                    <span class="flip-price">${formatNumber(f.spot_price)}</span>
+                                </span>
+                            </div>
+                        `;
+                });
+                document.getElementById('flipList').innerHTML = html;
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        // =============================================
+        // REALTIME
+        // =============================================
+        function setupRealtime() {
+            sb.channel('option-updates')
+                .on('postgres_changes', {
+                    event: 'INSERT',
+                    schema: 'public',
+                    table: 'option_analysis'
+                }, payload => {
+                    updateDisplay(payload.new);
+                    fetchFlips();
+                })
+                .subscribe();
+        }
+
+        // =============================================
+        // RESIZE CHART
+        // =============================================
+        function resizeChart() {
+            if (chart) {
+                const container = document.getElementById('chartContainer');
+                const rect = container.getBoundingClientRect();
+                const width = rect.width || container.clientWidth || 300;
+                chart.resize(width, 180);
+            }
+        }
+
+        // =============================================
+        // INIT
+        // =============================================
+        async function init() {
+            await new Promise(r => setTimeout(r, 100));
+            initChart();
+            await fetchLatestData();
+            await fetchFlips();
+            setupRealtime();
+            setInterval(fetchLatestData, 10000);
+            setInterval(fetchFlips, 30000);
+
+            window.addEventListener('resize', () => setTimeout(resizeChart, 200));
+            window.addEventListener('orientationchange', () => setTimeout(resizeChart, 500));
+        }
+
+        init();
+    </script>
+</body>
+</html>
